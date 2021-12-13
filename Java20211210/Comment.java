@@ -1,4 +1,4 @@
-
+package Java20211210;
 
 // 클래스명 선언
 public class Comment { //코드의 우측에도 사용

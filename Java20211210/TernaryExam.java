@@ -1,3 +1,4 @@
+package Java20211210;
 public class TernaryExam {
     public static void main(String[] args) {
         

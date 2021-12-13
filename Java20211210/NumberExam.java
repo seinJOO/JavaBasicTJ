@@ -1,3 +1,4 @@
+package Java20211210;
 public class NumberExam {
     public static void main(String[] args) {
         // 숫자 자료형

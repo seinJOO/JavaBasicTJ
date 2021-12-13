@@ -1,3 +1,4 @@
+package Java20211210;
 import java.util.HashMap;
 
 public class MapExam {

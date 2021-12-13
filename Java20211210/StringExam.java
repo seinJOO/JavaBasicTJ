@@ -1,3 +1,4 @@
+package Java20211210;
 public class StringExam {
     public static void main(String[] args) {
         //String 문자열 (char대신 사용가능)

@@ -1,3 +1,4 @@
+package Java20211210;
 public class CharExam {
     public static void main(String[] args) {
         //한글자를 표현 char

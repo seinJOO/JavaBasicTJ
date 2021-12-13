@@ -1,3 +1,4 @@
+package Java20211210;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -110,11 +111,7 @@ public class SelfTest {
             System.out.println("now "+total);
         }while (input != 0);
         System.out.println("total "+total);
-        System.out.println("The End");
-
-
-
-        
+        System.out.println("The End");        
     }
     
 }
