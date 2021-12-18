@@ -1,6 +1,6 @@
 package Java20211215;
 /*******세번째 정리******/
-public class IntExam {
+public class IntegerExam {
 
     public static void main(String[] args) {
         
