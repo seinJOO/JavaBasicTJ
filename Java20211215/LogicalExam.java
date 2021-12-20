@@ -1,4 +1,6 @@
+package Java20211215;
 
+import java.util.Scanner;
 public class LogicalExam {
 
 	public static void main(String[] args) {

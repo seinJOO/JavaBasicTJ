@@ -2,7 +2,7 @@ package Java20211218;
 
 import java.util.*;
 
-public class Baejoon {
+public class Exam {
 
 	public static void main(String[] args) {
 	

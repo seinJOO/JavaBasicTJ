@@ -1,3 +1,5 @@
+package Java20211215;
+
 public class TriExam {
     public static void main(String[] args) {
 		/* 삼항 연산자 (조건)

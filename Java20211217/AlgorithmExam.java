@@ -1,3 +1,5 @@
+package Java20211217;
+
 import java.util.*;
 class AlgorithmExam {
   public static void main(String[] args) {
