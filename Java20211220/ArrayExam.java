@@ -72,7 +72,7 @@ array배열 - 같은 타입의 여러 변수들을 하나의 묶음으로 다루
     예제 3) 학생 5명의 총 합계 점수와 평균을 구하시오
         int[] score = {100,88,98,90,96};
         int total = 0;
-        for (int item: score) {     //for each 구문 -> 배열을 하나씩 item에 담기
+        for (int item: score) {     //for each 구문 -> 배열 요소를 하나씩 item에 담기
             total += item;
         }
         double avg = total / (double)score.length;      //**형변환 해주기
