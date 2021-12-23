@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<!-- GET과 POST 전송방식
+	(form action = "jsp명" method="전송방식")
+
+	GET방식     - 데이터를 주소창에 끼워 넣어 전송
+			- 보안에 취약함
+			- 전송 가능한 용량이 적음
+			- 상대적으로 속도가 빠름
+			ex. http://localhost:8080/Project1/login.jsp?id=thejoeun&pw=0000 <<입력값이 주소창에 노출이 됨
+			
+	POST방식   - 바디에 끼워넣어 전송
+			- 보안 강화
+			- 전송 용량 제한이 없음
+			- 상대적으로 속도 느림
+			ex. http://localhost:8080/Project1/login.jsp <<주소창에 노출이 안됨
+			
+	서블릿 sevlet은 Server Applet의 줄임말
+	CGI의 단점을 보완하기 위해 SUN에서 개발한 자바 기반의 웹 프로그래밍 솔루션, 서블릿을 기반으로 JSP가 개발됨
+	JSP도 내부적으로는 서블릿으로 변환되어 수행 -> 서블릿의 구성이나 동작방식을 이해하면 JSP 이해가 수월하다 !!
+	
+	서블릿은 자바코드 안에 HTML 넣어서 구성
+	JSP는 HTML안에 자바코드를 넣어서 구성
+
+ -->
+
+
+<body>
+<form action = "login.jsp" method="get"> <!--로그인 버튼을 누르면 데이터를 받아서 db와 연결하여 확인해줌 -->
+<table align = center>
+<tr>
+<td colspan = 2 align = center><b>로그인</b></td>
+</tr>
+<tr>
+<td>아이디</td>
+<td><input type="text" name="id" placeholder="아이디를 입력하세요"></td>
+</tr>
+<tr>
+<td>패스워드</td>
+<td><input type="password" name="pw" required></td>
+</tr>
+<tr>
+<td colspan = 2 align = center height = 50><input type = "submit" value = "log in"></td>
+		<!-- type을 submit으로 넣으면 눌렀을 때 jsp를 호출하게 됨 !! -->
+</tr>
+</table>
+</form>
+</body>
+</html>
