@@ -18,8 +18,9 @@ public class selfTest {
 		for (int i = 0 ; i < coinUnit.length ; i++) {
 			result[i] = money / coinUnit[i];
 			money = money % coinUnit[i];
+			System.out.println(coinUnit[i] + "원 : " + result[i]);
 		}
-		System.out.println("500원 : " + coinUnit[i]);
+		
 		
 		
 				

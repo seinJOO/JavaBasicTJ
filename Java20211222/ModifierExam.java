@@ -20,8 +20,8 @@ public class ModifierExam {
 	- final을 선언하여 매서드를 만들면 오버라이딩을 할 수 없게 된다.
 	- final을 선언하여 클래스를 만들면 상속을 허용하지 않는 클래스가 된다.			
 			예시)
-			final class FinalTest {			//조상이 될 수 없는 클래스
-				final int MAX_SIZE = 10;	//값을 변경할 수 없는 변수, 상수
+			final class FinalTest {			//조상이 될 수 없는 클래스(잘 안씀)
+				final int MAX_SIZE = 10;	//값을 변경할 수 없는 변수, 상수(자주 씀)
 				final void getmaxSize(){}	//오버라이딩이 금지된 매서드
 			}
 		
@@ -51,11 +51,59 @@ public class ModifierExam {
 	생성자의 접근 제어자
 	- 생성자에 접근제어자를 사용하면 객체 생성을 제한할 수 있다.
 	- 생성자에 private을 지정하면 외부에서 생성자에 접근할 수 없다.
-	- 클래스 내부에서만 객체를 생성할 수 있다.
-	
-	
+	- 클래스 내부에서만 객체를 생성할 수 있다.	
 		
+	**전형적인 접근 제어자 활용의 예
+		-> 사실은 private int 변수이름만 잡아주면, 나머지 set~, get~는 이클립스에서 자동으로 생성해준다!!
 */
+		Time t = new Time(10,1,1);	//생성자에 변수 값 넣어주기
+		System.out.println(t.toString());
+		
+		//t.hour = 13; //변수 hour의 접근 제어자가 private이므로 직접 접근은 불가능하다
+		t.setHour(t.getHour() + 1);
+		System.out.println(t.getHour());
+		System.out.println(t.getMinute());
+		System.out.println(t.getSecond());
+		
 	}
+}
 
+	class Time {
+	private int hour, minute, second; 
+	//모든 멤버 변수의 접근 제어자는 private으로 하여 외부에서는 직접 변수를 조작하지 못하도록 한다
+	//이를 다루기 위한 매서드들은 모두 public으로 하여 반드시 매서드를 통해서만 변수에 접근하게 한다
+	//=> private로 제어한 변수는 매서드를 통한 접근만 허용한다 !!!
+	
+	Time(int hour, int minute, int second) {
+/*			생성자 Time - 생성자에도 접근 제어자를 사용하면 객체 생성을 제한할 수 있다
+		보통 생성자의 경우는 클래스의 접근 제어자와 같게 설정하지만, 다르게 설정할 수도 있다
+		생성자의 접근 제어를 통해 객체 생성을 제한하면 객체의 개수를 제한할 수 있다
+		*. 생성자가 private인 클래스는 다른 클래스의 조상이 될 수 없다
+		   왜냐하면 자식 클래스를 생성할 때 조상 클래스의 생성자를 호출해야 하는데,
+		   private이면 자식 클래스를 호출하는 것이 불가능하기 때문
+*/			setHour(hour);
+			setMinute(minute);
+			setSecond(second);
+	}
+	public int getHour() { //DB에서 가져올 경우 필요하지 않을 수 있음
+		return hour;
+	}
+	public void setHour(int hour) { //변수를 DB에서 가져온다고 해도 세팅은 필요함
+		if (hour < 0 || hour > 23) return;
+		this.hour = hour;
+	}
+	public int getMinute() {
+		return minute;
+	}
+	public void setMinute(int minute) {
+		if (minute < 0 || minute > 59) return;
+		this.minute = minute;
+	}
+	public int getSecond() {
+		return second;
+	}
+	public void setSecond(int second) {
+		if (minute < 0 || minute > 59) return;
+		this.second = second;
+	}
 }

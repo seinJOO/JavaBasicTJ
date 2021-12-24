@@ -86,6 +86,7 @@ public class oopExam {
 			System.out.printf("tvArr[%d].channel = %d%n", j, tvArr[j].channel);
 		}
 			
+	
 		
 	}
 }
