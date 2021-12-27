@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Input 타입 살펴보기</title>
+</head>
+<body>
+
+ID : <input type = "text" name = "id" placeholder = "아이디를 입력하세요"><br>
+Name : <input type = "text" name = "name" placeholder = "이름을 입력하세요" required><br>
+<!-- required : 필수 입력 사항 -->
+취미 : <input type="checkbox" name = "hobby" value = "book">책
+<input type="checkbox" name = "hobby" value = "web">웹서핑
+<input type="checkbox" name = "hobby" value = "sports">운동
+<!-- checkbox : 복수선택 가능 - 조합의 수가 많아 다루기 어려움 -->
+<br>
+성별 : <input type="radio" name = "sex" value = "male">남성
+<input type="radio" name = "sex" value = "female" checked>여성
+<!-- radiobox : 복수선택 불가  / checked : 기본선택으로 설정함-->
+<br>
+<textarea name="memo" rows="10" cols = "50" placeholder="메모를 입력하세요"></textarea>
+<br>
+<input type = "submit" value="등록"><input type="reset" value="취소">
+<br>
+<input type="number" name="id" value="10" min="1" max="100" step = "5">
+</body>
+</html>
