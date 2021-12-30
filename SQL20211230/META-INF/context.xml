@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- UTC : 과학표준시 -->
+<!-- 한번 만들면 db명, username, 비밀번호, maxTotal(총 커넥션 개수), maxIdel(최소 커넥션 개수)만 바꿔주면 됨! -->
+<Context>
+	<Resource name = "jdbc/testdb"
+				auth = "Container"
+				type = "javax.sql.DataSource"
+				driverClassName = "com.mysql.jdbc.Driver"
+				url = "jdbc:mysql://localhost:3306/testdb?serverTimeZone=UTC" 
+				username = "root"
+				password = "0000"
+				maxTotal = "16"
+				maxIdel = "4"
+				maxWaitMillis = "-1">
+	</Resource>
+</Context>
