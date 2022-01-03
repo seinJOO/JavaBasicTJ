@@ -1,0 +1,227 @@
+관계형 DB와 SQL
+
+기업에서 가장 많이 사용되는 DB, 관계형 DB
+데이터는 21세기의 원유라고 표현함 - 그만큼 잠재 가치가 크다
+
+과거에는 데이터가 일부 전문가들만 다루는 영역이었고 일반인에게는 생소한 개념이었음
+하지만 지금은 대용량 처리 기술 인터넷 발달로 빅데이터의 시대가 도래하였음
+이제는 IT전문가 뿐만 아니라 영업관리자, 마케터, 서비스 기획자 등 비전공실무자들도 데이터 분야에 관심을 갖게 됨
+
+데이터는 관련부서(IT팀)에 요청하거나 직접 DB에서 구함
+
+SQL을 알면 단 몇 줄의 쿼리문으로 원하는 데이터 추출 가능
+
+데이터 분석 과정
+1 문제인식
+2 데이터 수집/가공(SQL/전처리)
+3 데이터 분석(R/Python)
+4 분석 결과(보고서/회의)
+
+전체 과정에서 전처리 : pre-processing(결측치, 이상치)가 7~80%를 차지
+
+데이터의 종류 : 정형 / 비정형
+
+정형데이터
+ - 틀이 잡혀있는 데이터
+ - 체계화된 데이터
+ - 안정성이 높다
+ - 유연성이 낮다
+ - 금융, 제조 등 대부분의 기업의 데이터 (엑셀, CSV...)
+
+비정형
+ - 틀이 잡혀있지 않은 데이터
+ - 사전 정의가 없는 다양하고 방대한 데이터
+ - 텍스트(facebook, twitter..)
+ - 이미지, 음원
+
+데이터베이스란
+데이터는 어떤 것들의 '기록된 정보'이고,
+데이터베이스는 이러한 데이터를 모아서 관리하는 것
+
+관계형 데이터베이스란
+ - 현재 업무용으로 가장 많이 사용되는 방식, 지속적으로 발전해 나가는 데이터베이스
+ - MySQL MSSQL ORACLE IBM...
+ - 열(column)과 행(row)로 이루어진 2차원 테이블을 중심으로 설계된 데이터베이스
+ - 테이블들이 key와 관계라는 연결고리로 연결되어 원하는 데이터를 조회하고 가공하는 방식의 데이터베이스
+
+계층형 데이터베이스
+Root - Level 1
+       - Level 1 - Level 2
+	       - Level 2
+객체지향 데이터베이스
+데이터도 객체 모델로 관리
+
+객체 A	 <->	객체 B
+   |	객체 C	   |
+객체 D		객체 E
+
+XML 데이터베이스
+주로 인터넷에서 데이터를 관리하는 용도로 사용
+ - key&value (파이썬의 dict, 자바의 map, JS json)
+
+SQL
+ - 관계형 데이터베이스를 조작하기 위해 만든 표준 언어
+ - DBMS와 통신하기 위한 언어
+ - 사용자 -> SQL -> DBMS -> DB
+ - 특징
+ 1. 사용하기 쉽다
+ 2. 절차가 없는 비절차적 언어이다
+ 3. 관계형 DB를 조작한다
+ 4. 표준 언어이다
+ - 종류
+ DML 조작어 Data Manipulation Language
+	: SELECT INSERT UPDATE DELETE
+ DDL 정의어 Data Definition Language
+	: CREATE ALTER DROP RENAME
+ DCL 제어어 Data Control Language
+	: GRANT REVOKE
+ TCL 트랜젝션 컨트롤 Transaction Control Language
+	: COMMIT ROLLBACK
+
+SQL로 데이터 처리(추출/수집/가공)를 하여 데이터를 검색하고 분석한다
+
+관계형 데이터베이스의 구성 요소
+1) 테이블 뷰 인덱스 등으로 구성됨
+2) 데이터를 저장하고 그 데이터들의 관계의 집합이다
+3) 일관성, 정확성, 신뢰성을 위한 트랜젝션, 무결성 등의 개념이 존재함
+
+테이블 : 가장 많이 다루는 행과 열로 구성된 저장 단위
+	데이터베이스의 다양한 구성 요소 중 테이블을 가장 많이 사용
+	(데이터를 담는 그릇)
+	데이터베이스는 테이블들이 모여있는 집합
+	행(row)항목, 열(column)항목 속성을 가진 엑셀과 비슷한 성격임
+
+SQL Developer
+1. 접속(좌측 상단) : DB 정보 테이블/뷰 등의 객체 정보가 계층형태로 보여짐
+	- DB의 전체 구조를 알 수 있음
+2. 보고서(좌측 하단) : 데이터 모델링과 구조 보안 성능 등 모니터링과 보고서를 확인하는 영역
+	- 주로 DB관리자 시스템 담당자가 보는 화면으로 초반에는 사용할 일이 없음
+3. 편집(우측 상단) : SQL문을 작성하는 편집 영역 - 이 창에서 SQL문 작성
+	- 작성할 때 발생되는 문법 오류 등을 알려줌
+4. 출력(우측 하단) : SQL문의 실행 결과 등이 출력되는 영역
+
+별도의 ID HR pass 1234 생성 (기본 설정된 데이터베이스)
+ALTER USER HR ACCOUNT UNLOCK IDENTIFIED BY 1234;
+
+SELECT
+데이터를 조회하는데 필요한 거의 모든 기능을 제공함
+SELECT를 사용하여 행을 선택하고 열을 선택하고 테이블과 테이블을 연결할 수 있다
+SELECT문은 데이터를 조회하고 분석하는 데 가장 기본이며 중요한 SQL 구문이다
+
+SELECT문은 항상 FROM과 함께 사용된다
+다른 조건 추가가 필요하면 WHERE절에 기속하고 데이터가 출력되는 순서를 조정하려면 ORDER BY를 사용한다
+
+SELECT(열제목 or *) <- 가져올 열 / 열들 / 전체
+FROM (테이블명)
+[WHERE (조건식)] <- 선택
+[ORDER BY (열제목 ASC or DESC)];
+
+1. SQL 구문은 항상 대문자로 입력한다
+2. [] 안의 항목은 선택사항으로 생략 가능하다
+3. 구문의 끝은 세미콜론을 입력한다 (생략 가능할 때도 있다)
+4. 한줄 또는 여러 줄을 사용하든 상관하지 않는다(문장 끝에 세미콜론만 붙이기)
+5. 들여쓰기도 상관하지 않는다
+
+SELECT는 데이터를 선택한다는 의미
+단지 선택만 할 뿐, 결과값이 데이터베이스에 반영되는 것은 아니다
+
+SELECT * <- 모든 열을 출력
+FROM employees; <- employees 테이블로부터
+
+SELECT 명령문 뒤의 나열한 열들의 이름 순으로 조회된다
+열들의 이름은 ,를 사용하여 계속 붙일 수 있고 결과는 나열한 순서대로 출력된다
+
+모든 열 *을 대신하여 모든 열의 이름을 모두 적으면 같은 결과가 나오게 된다
+
+ORDER BY employee_id DESC; <- employee_id 값을 기준으로 내림차순 DESC 정렬
+
+ORDER BY  명령문에 아무것도 지정하지 않으면 첫 열 기준으로 오름차순 정렬되기 때문에 ORDER BY employee_id ASC;와 같다
+
+ORDER BY 열이름, 열이름 DESC, 열이름 ASC 식으로 정렬하고 싶은 열을 계속 지정할 수 있다.
+
+DISTINCT : 중복값 제거하고 출력 
+- SELECT DISTINCT job_id FROM employees;
+- DISTINCT를 사용하면 데이터 값이 종류별로 하나씩만 출력된 것을 볼 수 있다
+
+AS : 별명 사용하기
+SELECT 문의 결과를 출력할 때 일반적으로 열 이름은 테이블을 정의할 때 명명한 열의 제목을 출력한다
+원래의 열이름 외의 이름으로 쓰고자 할 때 사용하는 것이 별칭(alies)이다.
+1) 열이름을 임시로 변경하는 데 사용된다
+   원래 이름이 물리적으로 변경되는 것은 아니다
+2) 별칭은 열이름 바로 뒤에 사용하며 AS를 사용한다
+3) AS는 생략 가능하다
+예) SELECT DISTINCT job_id AS 사원번호, first_name AS 이름 FROM employees;
+
+
+데이터 값 연결 - 각 열에 따로 담겨 있는 데이터를 하나로 붙이거나 추가 서식을 붙여 활용할 수 있다
+	|| 연결 연산자 2개
+	[열 이름] || [열 이름] [열 이름] || '문자'
+
+SELECT employee_id, first_name || ' ' ||last_name FROM employees;
+SELECT email || '@naver.com' FROM employees;
+
+데이터 값끼리 연산
+
+SELECT employee_id AS 사원번호, salary AS 현재급여, salary+500 AS 인상급여, salary-100 AS 인하급여 FROM employees;
+
+WHERE : 조건절을 활용한 데이터 검색 
+
+행의 특정 데이터 값을 조회하거나 비교하여 연산처리하는 방법
+'어디에서 어떻게' 가져올지를 결정한다
+WHERE은 FROM 다음에 위치하며 조건식을 포함한다
+1) 조건을 지정하고
+2) FROM절 다음에 위치한다
+3) 조건절에는 비교연산자 논리연산자 표현식 문자 숫자 등을 사용한다
+
+SELECT 열이름
+FROM 테이블이름
+WHERE 조건;
+
+SELECT * FROM employees WHERE employee_id >= 100; <- 조건이 숫자
+SELECT * FROM employees WHERE first_name = 'David'; <- 조건이 문자('') - 대소문자 구분 필수
+
+BETWEEN a AND b 두 값의 범위에 해당하는 행들을 검색
+SELECT * FROM employees WHERE salary BETWEEN 10000 AND 20000;
+
+IN : 조회하고자 하는 데이터 값이 여러개일때 사용한다
+     =와 비슷하지만 =은 하나만 지정하지만 IN은 여러개를 지정할 수 있음
+
+SELECT * FROM employees WHERE salary IN (10000, 17000, 24000);
+
+
+LIKE : 조건값이 명확하지 않을 때 '~와 같은'
+1) %와 _같은 기호 연산자와 함께 사용된다
+2) 조건에는 문자나 숫자가 포함된다
+3) %는 모든 문자의 의미이고 _는 한 글자를 의미한다
+
+SELECT * FROM employees WHERE job_id LIKE 'AD%'; <- 맨 앞에 AD를 포함한 모든 문자
+SELECT * FROM employees WHERE job_id LIKE 'AD___'; <- 맨 앞에 AD + 문자 세 개
+
+
+IS NULL : 데이터의 값이 null인 경우를 조회할 때 사용(null은 공백이나 문자가 아님)
+
+SELECT * FROM employees WHERE manager_id IS NULL;
+
+
+AND : 주어진 조건들을 모두 만족
+
+SELECT * FROM employees WHERE salary > 4000 AND job_id = 'IT_PROG';
+
+OR : 주어진 조건 중 하나만 만족해도 전부 만족
+
+SELECT * FROM employees WHERE salary > 4000 OR job_id = 'IT_PROG';
+
+
+NOT : 같지않다 - 같은 표현 : != , <> (ISO표준)
+
+SELECT * FROM employees WHERE job_id <> 'IT_PROG';
+SELECT * FROM employees WHERE manager_id IS NOT NULL;
+
+
+
+
+
+
+
+
+
