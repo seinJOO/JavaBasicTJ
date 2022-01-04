@@ -216,12 +216,3 @@ NOT : 같지않다 - 같은 표현 : != , <> (ISO표준)
 
 SELECT * FROM employees WHERE job_id <> 'IT_PROG';
 SELECT * FROM employees WHERE manager_id IS NOT NULL;
-
-
-
-
-
-
-
-
-

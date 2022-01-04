@@ -1,0 +1,151 @@
+#함수
+
+입력 -> 함수 -> 출력
+input	     output
+딸기   믹서기   딸기주스
+
+1. 데이터 값을 계산하거나 조작한다
+2. 행의 그룹에 대해 계산하거나 요약한다
+
+함수의 종류
+- 단일 행 함수 : 한 번에 하나만 처리
+- 그룹 함수 : 동시에 대상 열 전체를 처리
+	   d1, d2, d3, d4 동시에 입력받아서 평균, 합계 등 출력
+	   그룹함수는 GROUP BY 절과 함께 사용됨
+
+단일 행 함수에 사용되는 데이터 타입
+- CHAR(n) 문자, 고정길이
+- VARCHAR(n) 문자, 가변길이
+- 숫자 NUMBER() 숫자 타입
+- 날짜 DATE() 날짜 타입
+
+단일 행 함수들은 테이블에 존재하는 많은 행들이 한 번에 하나씩만 입력되어 하나씩 처리되는 함수
+1) 각 행에 대해 수행함
+2) 각 데이터 타입에 맞는 함수를 사용해야 함
+3) 행 별로 하나의 결과를 반환
+4) 중첩해서 사용할 경우 가장 안쪽단계에서 바깥쪽 단계로 진행
+함수1(함수2(함수3)) ====> 함수3 >> 함수2 >> 함수1
+
+문자 타입 함수는 주로 데이터 조작에 쓰이고,
+문자나 문자열 데이터는 작은따옴표('')를 사용하여 표현함
+
+lower() 값을 소문자로 변환한다
+	lower('ABCD') -> abcd
+upper() 값을 대문자로 변환한다
+	upper('abcd') -> ABCD
+initcap() 첫 글자만 대문자로 변환한다
+	initcap('abcd') -> Abcd
+substr('문자열', 시작위치, 길이) 문자열들 중에서 일부분만 선택 (1에서 시작)
+	substr('ABC',1,2) -> AB
+replace() 특정 문자열을 찾아 바꾼다
+	replace('AB','A','E') -> EB
+concat() 두 문자열을 연결한다 (||와 같음)
+	concat('A','B') -> AB
+length() 문자열의 길이를 구한다	(1에서 시작)
+	length('AB') -> 2
+instr() 문자의 위치를 구한다
+	instr('ABCD','D') -> 4
+lpad() 왼쪽부터 특정 문자로 자리를 채운다
+	lpad('ABCD', 6,'*') -> **ABCD
+	lpad('78', 3, '0') -> 078
+rpad() 오른쪽부터 특정 문자로 자리를 채운다
+	rpad('ABCD', 6, '*') -> ABCD**
+ltrim() 문자열의 왼쪽 문자를 지운다
+	ltrim('ABCD', 'AB') -> CD
+	ltrim('   CD', ' ') -> CD
+rtrim() 문자열의 오른쪽 문자를 지운다
+	rtrim('ABCD','CD') -> AB
+trim() 문자열의 공백 제거 - 문자열 중간의 여백은 제거 불가
+
+예제 1) LOWER/UPPER로 대소문자 적용
+SELECT last_name,
+LOWER(last_name) LOWER적용,
+UPPER(last_name) UPPER적용,
+email,
+INITCAP(email) INTICAP적용
+FROM employees;
+
+예제 2) SUBSTR으로 문자열 추출
+SELECT job_id, SUBSTR(job_id, 1, 2)
+FROM employees;
+
+예제 3) REPLACE로 문자 대체
+SELECT job_id, REPLACE(job_id, 'account','ACCNT') FROM employees;
+
+예제 4) LPAD
+lpad SELECT first_name, lpad(first_name, 12, '*') FROM employees;
+
+예제 5) F가 있으면 삭제하기
+SELECT job_id, 
+LTRIM(job_id, 'F') FROM employees;
+
+
+DUAL테이블 : dummy라는 열 하나와 x데이터 값을 가진 테이블. 
+	   의미나 사용목적 없이 테이블을 문법적으로 지정해야만 할 때 사용
+
+#숫자타입 함수
+
+숫자타입 함수들은 주로 숫자를 계산하거나, 계산이 끝난 뒤에 추가로 가공처리를 할 때 사용함
+
+round() 반올림
+	round(15.351, 0) -> 15
+	round(15.751, 0) -> 16
+  	 1  2  3 . 4 5 6
+  자릿수:	-3 -2 -1   1 2 3 
+
+trunk 숫자를 절삭(버림)한다 - 문법은 round와 동일
+	trunc(15.351, 1) -> 15.3
+
+mod() 나누고 나서 나머지만 취함 - 홀수 짝수 배수 구분용
+	mod(15,2) -> 1
+sign() 양수(1), 음수(-1), 0을 구분
+	sign(15) -> 1
+
+SELECT salary, salary/30 FROM employee; -> 일급
+
+예제 1) 자릿수에 따라 반올림 해보기
+SELECT salary, 
+ROUND(salary/30,-1) minus1,
+ROUND(salary/30,1) plus1,
+ROUND(salary/30,0) zero0 
+FROM employees;
+	
+<변환함수>
+각 열에 대해 데이터 타입을 규정하고 있음
+-> 따라서 SQL문을 실행하기 위해 데이터 값의 타입을 변환해야 할 때도 있다
+데이터베이스 시스템에 의해 자동으로 (암시적으로) 또는 사용자에의 수동으로 (명시적으로) 실행될 수 있다
+
+<자동 형변환>
+VARCHAR or CHAR -> NUMBER
+VARCHAR or CHAR -> DATE
+
+<자동 데이터 타입 변환>
+SELECT 1 + '2' FROM dual;
+'2'는 문자임에도 결과값은 3이 잘 출력됨 -> DBMS가 계산을 위해 문자를 자동으로 숫자로 변환
+BUT, SQL문의 성능과 안정성을 위해서는 수동으로 데이터 타입 변환을 수행하기
+
+<수동 데이터 타입 변환>
+TO_CHAR 숫자/문자/날짜를 VARCHAR로 변환
+	 SELECT TO_CHAR(SYSDATE, 'YYYYMMDD'),
+		TO_CHAR(SYSDATE, 'MON') -> JAN	
+		TO_CHAR(SYSDATE, '날짜:YYYY/MM/DD 시간:HH:MI:SS PM')
+		FROM dual;
+	형식 'MON' : 영문 줄임
+TO_NUMBER 문자를 숫자로 변환 -> 숫자처럼 보이는 문자열을 진짜 숫자 데이터 타입으로 변환
+TO_DATE
+
+<데이터 조작 / 자주 쓰는 함수들>
+NOT NULL : 특정 열의 행에 대한 데이터 값이 없다면 데이터 값은 NULL이 된다
+	   NULL은 '값이 아무것도 없다'는 것을 나타냄
+	   테이블을 만들 때 NULL값을 가지지 못하도록 지정 가능함
+*. NULL(결측치)의 특징
+   1) 함수 적용이 불가능함 (값이 없기 때문에)
+   2) 0도 아니고 공백' '도 아님
+   3) null 값을 포함하여 계산한 결과는 항상 null이다.
+   *) 보통 결측치는 삭제하거나, 평균값/최빈값을 매뉴얼로 입력한다.
+
+예제 1) commission_pct 열의 null값을 다뤄보기
+
+
+
+
