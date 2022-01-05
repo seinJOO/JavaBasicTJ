@@ -1,0 +1,297 @@
+
+<그룹함수>
+- 집계함수, 기준열에 대해 같은 데이터 값끼리 그룹으로 묶은 행들의 집합에 대해
+  그룹함수 연산을 GROUP BY 절을 이용하여 처리한다
+- 묶은 열, 그룹에 대해 조건이 필요하면 HAVING 절을 추가로 적용
+- 데이터를 그룹화하여 특성별로 분류하거나 계산 - 레포트, 기술 통계 가능해짐
+
+SELECT 그룹함수(열이름) FROM 테이블명 [WHERE 조건식] [ORDER BY 열이름];
+
+그룹함수(열이름)
+COUNT 행의 개수 - NULL값도 개수를 셈
+SUM 합계
+AVG 평균
+MAX 최대값
+MIN 최소값
+STDDEV 표준편차
+VARIANCE 분산
+
+GROUP BY 그룹으로 묶어 계산하기
+- SQL에서 같은 데이터 값을 갖는 행끼리 묶어 그룹화하여 연산함
+- 기준열을 지정하여 그룹화하는 명령어
+- SELECT의 기준열과 그룹함수가 같이 지정될 경우,
+  GROUP BY 절의 기준열 이름이 반드시 기술되어야 한다
+- WHERE 절을 사용하면 행을 그룹으로 묶기 전 조건식이 앞서 적용된다
+- SELECT 절에 그룹함수를 사용하지 않아도 GROUP BY 절만으로도 사용할 수 있다.
+
+SELECT 기준열, 그룹함수(열이름)
+FROM 테이블명	-> 테이블 접근
+[WHERE 조건식]	-> 조건식에 맞는 데이터만 추출
+GROUP BY 열이름	-> 같은 데이터끼리 그룹화
+[ORDER BY 열이름];-> 오름차순(ASC), 내림차순(DESC) 정렬
+
+예시) employees 테이블에서 employee_id가 10 이상인 직원에 대해 job_id별로 그룹화하여
+     job_id별로 총 급여, 평균 급여를 구하여 총 급여 기준으로 내림차순 정렬
+
+SELECT job_id, SUM(salary), AVG(salary)
+FROM employees
+WHERE employee_id >= 10
+GROUP BY job_id
+ORDER BY SUM(salary) DESC;
+
+예시) GROUP BY절에서 열이름 job_id와 manager_id를 순서대로 기술하여 대그룹화/중그룹화
+     -> 그룹화된 집합에 대해 그룹함수를 적용해 결과 출력
+     => job_id별로 대그룹화, manager_id별로 여러 개의 중그룹화, manager_id별로 총급여와 평균급여 계산
+
+SELECT job_id, manager_id,SUM(salary), AVG(salary)
+FROM employees
+WHERE employee_id >= 10
+GROUP BY job_id, manager_id
+ORDER BY SUM(salary) DESC;
+
+HAVING : 연산된 그룹 함수 결과에 조건 적용
+- WHERE절에서는 그룹 함수를 쓸 수 없기 때문에 사용
+- 그룹함수의 결과값에 대해 조건식을 적용
+- 일반적으로 GROUP BY 절 바로 다음에 기술(논리적, 가독성 상승)
+
+SELECT 열이름, 그룹함수(열이름)	1
+FROM 테이블명			2
+[WHERE 조건식]			3
+GROUP BY 열이름			4
+[HAVING 조건식]			5
+[ORDER BY 열이름]			6
+
+예시 )   employees 테이블에서 employee_id가 10 이상인 직원에 대해서 job_id별로 그룹화하여
+	job_id별 총급여와 평균 급여를 구하는데, 총 급여가 30000보다 큰 값만 출력
+	결과는 job_id별로 총급여를 기준으로 내림차순 정렬
+﻿
+SELECT job_id, SUM(salary), AVG(salary)
+FROM employees
+WHERE employee_id >=10
+GROUP BY job_id
+HAVING SUM(salary) > 30000
+ORDER BY SUM(salary) DESC
+
+<여러 개의 테이블을 연결하기>
+
+관계형 데이터베이스
+- 테이블들이 관계를 맺고 조작되는 원리
+- 테이블들에는 각 유형에 맞는 데이터가 저장되어 있고 테이블들은 특정한 규칙에 따라 상관관계를 맺음
+- 데이터가 테이블들에 흩어져 저장되어 있으므로 사용자가 원하는 형태로 데이터를 조작하려면 방법이 필요함
+  -> 조인join으로 한 개 이상의 테이블과 테이블을 서로 연결하여 사용
+
+JOIN 조인
+- 관계형 데이터베이스의 테이블 안에 있는 행들의 논리에 따라 연결하도록 하는 기법
+- 관계형 데이터베이스의 핵심 요소
+- 동등조인, 외부조인, 자체조인 등을 많이 사용(그 외 곱집합, 비동등...)
+- 동등조인 : 조인 조건이 정확히 일치하는 경우
+	  똑같은 데이터끼리 연결 - 가장 일반적이고 자주 쓰는 조인
+	  조건값이 정확하게 일치하는 경우만 가져오기 때문에 inner join, equi join이라고 부름
+- 외부조인 : 조인 조건이 정확하지 않아도 가능 - 조건을 만족하지 않는 행도 모두 출력
+	    특징 1) 외부조인은 동등조인 조건을 만족하지 못해 누락되는 행을 출력하기 위해 사용
+		2) 외부조인은 (+) 기호를 사용
+		3) (+)기호는 조인할 행이 없는, 데이터 값이 부족한 테이블의 열이름 뒤에 기술함
+		4) (+)기호는 한 쪽에만 기술할 수 있으며, 양 쪽 모두에는 기술할 수 없다
+		5) (+)기호를 붙이면 데이터 값이 부족한 테이블에 null값을 갖는 행이 생성된다
+- 자체조인 : 자체 테이블에서 조인(자기 자신의 데이터와 연결)
+	    특징	1) 자기 자신 테이블을 이용하여 조인
+		2) 같은 테이블을 사용하지만 조인을 위해 다른 별명 사용 - 다른 조인과 같은 형태
+		3) 동일한 열로 구성되어 있기 때문에 꼭 별칭.열이름 형태로 명확히 구별하여 조회!!!
+
+예시 - 동등조인)
+SELECT *
+FROM employees A, departments B
+WHERE a.department_id = b.department_id;
+-> 키값으로 department_id를 사용하여 조인한 결과 같은 값끼리 연결되어 조회됨
+
+예시 - 동등조인) employees테이블과 departments테이블과 location테이블을 조인하여 
+	     각 직원이 어느 부서에 속하는지 부서의 소재지가 어디인지 조회
+
+SELECT c.city, b.department_name, employee_id, first_name, last_name
+FROM employees A, departments B, locations C
+WHERE a.department_id = b.department_id
+AND b.location_id = c.location_id;
+
+예시 - 외부조인) 
+SELECT a.department_id, a.first_name, a.last_name, b.department_id, b.department_name
+FROM employees A, departments B
+WHERE a.department_id(+) = b.department_id
+ORDER BY a.department_id
+-> employees에 데이터가 더 많기 때문에 (+)로 인해 null값까지 모두 출력 => 일치하지 않아도 출력됨
+
+예시 - 자체조인) 각 직원의 직속매니저 출력하기
+employees테이블의 manager_id 조회 후 manager_id에 일치하는 인적정보를 호출하기 위해 자체조인
+
+SELECT a.employee_id, a.first_name||' '||a.last_name, a.manager_id,
+        b.first_name||' '||b.last_name
+FROM employees A, employees B
+WHERE A.manager_id = B.employee_id
+ORDER BY a.employee_id
+
+<집합연산자>
+- 집합연산자를 이용해 여러 테이블을 연결
+- SELECT문을 여러개 연결하여 작성
+
+UNION : 합집합 - 중복되는 행은 한 번만 출력
+	각기 다른 두 개 이상의 SELECT문을 실행한 결과를 하나로 묶어서 출력 가능
+UNION ALL : 중복되는 행도 출력
+INTERSET : 교집합 - 중복되는 행만 출력
+	   양쪽 SELECT문에 모두 존재하는 데이터만 출력
+MINUS : 차집합 - 첫 번째 데이터에서 두 번째 데이터와 중복되는 데이터를 제외하여 출력
+	첫 번째 SELECT문의 집합에서 양쪽 테이블의 교집합을 뺀 결과
+
+예시 - UNION) employees의 department_id의 집합과 department의 department_id 집합을 출력
+
+SELECT department_id
+FROM employees
+UNION
+SELECT department_id
+FROM departments; -> 중복을 삭제하고 출력
+
+SELECT department_id
+FROM employees
+UNION ALL
+SELECT department_id
+FROM departments
+ORDER BY department_id; -> 중복을 포함하고 출력
+
+예시 - INTERSECT)
+
+SELECT department_id
+FROM departments
+INTERSECT
+SELECT department_id
+FROM employees; -> 중복되는 행만 출력 - employees값에만 있는 null값은 출력 안됨
+
+예시 - MINUS)
+
+SELECT department_id
+FROM departments
+MINUS
+SELECT department_id
+FROM employees; -> departments 테이블에만 존재하는 department_id값 출력
+
+
+<서브쿼리> 
+- SELECT문 안에서 보조로 사용되는 또 다른 SELECT문 = SELECT문 안의 SELECT문
+- 복잡한 SELECT문을 작성할 때 필수로 사용됨
+- 중첩 nested 쿼리라고 함 -> 서브쿼리의 결과를 메인쿼리가 받아서 처리하는 구조
+- SELECT구문을 한 번으로 줄일 수 있음
+    특징	1) 서브쿼리는 괄호()로 묶어서 사용함 (메인쿼리는 묶지 않는다)
+	2) 메인과 서브를 연결하기 위해 단일행 연산자 또는 다중행 연산자를 사용함
+	3) 메인쿼리는 연산자의 왼쪽에 기술하고 서브퀴리는 연산자의 오른쪽에 기술한다
+	4) 서브쿼리가 먼저 실행되고 메인쿼리가 실행된다
+
+단일행 서브쿼리
+- 서브쿼리 SELECT 문에서 얻은 결과값 한 개 행을 메인쿼리로 전달하는 서브쿼리
+- 단일행 연산자는 하나의 행을 처리하는 연산자 - 메인쿼리와 서브쿼리가 서로 같아야 함
+- 전달 결과가 다중행(결과값이 여러 행)이면 오류 발생
+
+예시) 드한의 연봉과 같은 연봉을 가진 직원을 출력하기
+SELECT *
+FROM employees A
+WHERE A.salary = (  SELECT salary
+                    FROM employees
+                    WHERE last_name = 'De Haan');
+
+De Haan의 salary는 17000 -> 서브쿼리 결과인 (1700)을 메인 쿼리의 조건값으로 전달
+-> salary가 17000인 모든 직원 출력
+
+예시) 서브쿼리의 결과값이 다중행인 경우
+SELECT *
+FROM employees A
+WHERE A.salary = (
+                    SELECT salary
+                    FROM employees
+                    WHERE last_name = 'Taylor');
+Taylor인 직원이 두 명 존재하고 각 연봉이 다름 -> 서브쿼리 결과인 (8600, 3200)는 단일행 연산자에서 오류 발생
+
+다중행 서브쿼리
+- 서브쿼리 SELECT 문에서 얻은 결과값 여러 행을 메인쿼리로 전달하는 서브쿼리
+- 다중 행의 결과값을 조건식으로 받아 메인 쿼리에서 처리
+- IN : 여러 개의 같은 값
+- NOT IN : 여러 개의 같지 않은 값
+- EXISTS : 값이 있으면 TRUE, 없으면 FALSE
+- ANY : or와 같음, 최소한 하나라도 만족하면 된다 - ANY(10, 20)
+- ALL : and와 같음, 모두 포함해야 만족 - ALL(10,20)
+
+예시 - IN) 부서(그룹)별 최저연봉과 같은 연봉액을 가진 직원 모두 출력
+SELECT *
+FROM employees A
+WHERE A.salary IN (
+                    SELECT MIN(salary)
+                    FROM employees
+                    GROUP BY department_id);
+
+예시 - IN) employee에서 job_id별로 가장 낮은 salary가 얼마인지, 해당하는 직원이 누구인지 찾기
+
+SELECT *
+FROM employees A
+WHERE (A.job_id , A.salary) IN (
+                    SELECT job_id, MIN(salary)
+                    FROM employees
+                    GROUP BY job_id)
+ORDER BY A.salary DESC;
+-> 그룹함수 MIN을 사용해 job_id별로 최저 salary를 찾아냈고 그 값을 다중 열 서브쿼리를 통해 메인쿼리에 전달
+-> 해당 직원이 누구인지 메인쿼리에서 찾음
+
+FROM절 서브쿼리
+- FROM : 테이블 이름을 기술하여 해당 테이블의 데이터 값을 불러옴
+- FROM절에 서브쿼리를 사용하면 SELECT문을 테이블처럼 사용할 수 있음 -> 더 간결하고 효율적인 SELECT문 작성
+
+
+예시) 직원들 중 department_name이 IT인 직원 출력
+
+SELECT * FROM employees A, (SELECT department_id
+			    FROM departments
+			    WHERE department_name = 'IT') B
+WHERE A.department_id = b.department_id;
+
+데이터 삽입/갱신/삭제
+
+c CREATE
+r READ
+u UPDATE
+d DROP(DELETE)
+
+- 데이터를 직접 조작하는 방법
+	SELECT문 : 데이터 출력을 위한 사용 (수정 불가)
+	DML문 : 데이터를 직접 조작하는 데 사용 (직접 데이터를 삽입/갱신/삭제)
+- DATA MANIPULATION LANGUAGE 데이터 조작어
+- 트랜젝션 : 데이터를 조작하여 저장하는 일련의 과정 -> 명령어 TRANSACTION, DML로 다룸
+- DML 명령어를 사용할 때는 테이블의 속성과 제약조건에 주의해야 함
+- 명령어를 실행하여도 데이터베이스에 영구적으로 저장되는 것은 아님
+-> 최종적으로 반영하려면 COMMIT을 해야함 => COMMIT;으로 실행 가능!
+   커밋을 하지 않은 채로 데베 시스템이 비정상적으로 셧다운되면 커밋 전에 반영된 데이터는 저장되지 않음
+   ROLLBACK으로 되돌리기
+
+INSERT : 테이블에 새로운 데이터(NEW DATA)를 행(ROW)단위로 삽입
+- 열 이름과 입력되는 데이터 값이 일치하는지 확인하기 위해 열 이름을 모두 기술하는 것을 권장
+
+예시)
+INSERT INTO departments(department_id,department_name,manager_id,location_id)
+VALUES (271,'Sample_Dept',200,1700);
+
+INSERT INTO departments
+VALUES (271,'Sample_Dept',200,1700);
+
+UPDATE : 테이블에 이미 있는 내용 갱신
+- 기존의 데이터를 다른 데이터 값으로 변경할 때 사용
+- WHERE 조건절 사용 가능
+UPDATE 테이블명
+SET 열이름1 = 데이터값 1
+WHERE 조건식
+
+예시) departments 테이블에 department_name이 'Sample_Dept'인 행을 찾아서
+	manage_id값을 500으로, location_id를 2000으로 변경하기
+
+UPDATE departments
+SET manager_id = 100, location_id = 2000
+WHERE department_name = 'Sample_Dept';
+
+DELETE : 테이블의 행을 삭제
+- WHERE 조건절 사용 가능
+
+DELETE FROM departments
+WHERE department_name = 'Sample_Dept';
+

@@ -1,0 +1,57 @@
+데이터의 무결성
+- 데이터베이스에 저장된 데이터값과 사용자가 의도한 데이터값은 일치해야한다
+- 주민등록번호와 같은 값은 중복된 값이 있을 수 없다
+- 중복된 값이나 null값이 입력되면 데이터 식별에 문제가 발생할 수 있음
+- salary 열의 데이터 값에 숫자가 아닌 '오천만원' 문자가 입력된다면 큰 문제가 발생할 수 있음
+- 데이터베이스 관리의 기본 규칙을 꼭 준수해야 함
+-> 데이터베이스 시스템은 데이터에 접근하거나 데이터를 처리할 때마다 부적절한 데이터가 입력되는지 검사하여
+   데이터의 결점이 없음 = 무결성을 유지하게 된다!
+
+개체 무결성 : 고유해야하며, null 값을 가질 수 없다
+참조 무결성 : 참조되는 외래키가 존재하면 행은 삭제될 수 없고 기본키도 변경될 수 없다
+영역 무결성 : 데이터의 형태, 범위, 유일성에 관한 제한
+
+제약 조건(constraint) : 정해놓은 데이터 관리 규칙
+- 제약 조건에 맞는 데이터만 입력받고 규칙에 어긋나는 데이터는 거부하여 무결성을 지킴
+
+Error report -
+ORA-00001: unique constraint (HR.DEPT_ID_PK) violated
+ = 첫 열에는 고유한(unique) 값만 입력되도록 제약 조건이 설정되어, 이미 존재하는 값을 삽입할 때의 오류
+
+Error report -
+ORA-01400: cannot insert NULL into ("HR"."DEPARTMENTS"."DEPARTMENT_ID")
+ = 고유값을 입력해야하는 열에 null값을 넣었을 때 발생하는 오류
+
+INSERT뿐만 아니라 UPDATE나 DELETE 명령어를 사용할 때도 제약조건의 준수 여부가 중요하다
+무결성과 제약조건은 데이터를 정상으로 유지하기 위한 장치로, DML 명령어를 사용하기 전에 확인해야 한다
+
+트랜잭션(transaction) : DML(삽입,갱신,삭제)과 관련된 논리적인 작업
+- 데이터 무결성이 보장되는 상태에서 DML작업을 완수하기 위한 기본 작업 단위
+	트랜잭션 논리 예시)
+	은행 잔액 100만원 A계좌
+	A -> B 10만원 이체
+	A계좌 10만원 인출 / B계좌 10만원 입금 -> 트랜잭션 완료
+- 트랜잭션의 처리가 완전히 끝나지 않았을 경우에는 전혀 이루어지지 않은 것과 같아야 함(all or nothing)
+- 트랜잭션이 성공하면 결과를 영구적으로 보장해야한다
+- 트랜잭션의 수행 단계 : 실행 -> 부분완료 -> (commit) -> 완료
+커밋 commit : 트랜잭션의 모든 미결정 데이터(부분완료)를 영구적으로 반영함으로써 트랜잭션을 종료함(완료)
+롤백 rollback : 트랜잭션의 모든 미결정 데이터 변경을 포기함으로 트랜잭션을 종료함(실행 전으로 되돌리기)
+
+
+DDL Data Definition Language : 따로 커밋하지 않아도 즉각 자동으로 반영
+- CREATE : 테이블 생성
+CREATE TABLE sample_product
+    (product_id number, product_name varchar(30), manu_date date);
+
+INSERT INTO sample_product
+VALUES (
+1,'TV',to_date('140101','YYMMDD'));
+INSERT INTO sample_product
+VALUES (
+2,'Washer',to_date('150101','YYMMDD'));
+INSERT INTO sample_product
+VALUES (
+3,'Cleaner',to_date('160101','YYMMDD'));
+
+
+
