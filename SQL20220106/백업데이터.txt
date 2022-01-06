@@ -1,0 +1,125 @@
+1) address테이블 생성
+CREATE TABLE address(zip_code VARCHAR2(6), address_detail VARCHAR2(20));
+
+2) address테이블의 zip_code를 pk로 설정
+ALTER TABLE address ADD CONSTRAINT pk_zip_code PRIMARY KEY (zip_code);
+
+3) customer 테이블 생성
+CREATE TABLE customer(  customer_id VARCHAR2(10),
+                        customer_name VARCHAR2(20),
+                        phone_number VARCHAR2(15),
+                        email VARCHAR2(20),
+                        first_reg_date DATE,
+                        sex_code VARCHAR2(2),
+                        birth VARCHAR2(8),
+                        job VARCHAR2(20),
+                        zip_code VARCHAR2(6));
+
+4) customer 테이블의 customer_id를 pk로 설정
+ALTER TABLE customer ADD CONSTRAINT pk_customer PRIMARY KEY (customer_id);
+
+5) address테이블의 zip_code를 외래키로 설정하여 customer테이블의 zip code와 연결
+ALTER TABLE customer ADD CONSTRAINT fk_customer_zip_code FOREIGN KEY(zip_code) 
+REFERENCES address(zip_code);
+
+6) item 테이블 생성하기
+CREATE TABLE item (     item_id VARCHAR2(10),
+			product_name VARCHAR2(30),
+			product_desc VARCHAR2(50),
+			category_id VARCHAR2(10),
+			price NUMBER(10,0));	**number(전체 자릿수, 소수점 자릿수)
+
+7) item 테이블의 item_id를 pk로 설정
+ALTER TABLE item ADD CONSTRAINT pk_item PRIMARY KEY (item_id);
+
+8) reservation 테이블 생성
+CREATE TABLE reservation (
+    reserv_no VARCHAR2(30),
+    reserv_date VARCHAR2(8),
+    reserv_time VARCHAR2(4),
+    customer_id VARCHAR2(10) CONSTRAINT nn_reservation_customer_id NOT NULL enable,  **null을 허용하지 않음
+    branch VARCHAR2(20),
+    visitor_cnt NUMBER(3,0),
+    cancel VARCHAR2(1));
+
+9) reservation 테이블의 reserv_no를 pk로 설정
+ALTER TABLE reservation ADD CONSTRAINT pk_reservation PRIMARY KEY (reserv_no);
+
+10) customer 테이블의 customer_id를 외래키로 설정하여 reservation 테이블의 customer_id와 연결해주기
+ALTER TABLE reservation ADD CONSTRAINT 
+fk_reservation_customer_id FOREIGN KEY (customer_id) REFERENCES customer (customer_id);
+
+11) order_info 테이블 생성
+CREATE TABLE order_info (
+    order_no VARCHAR2(30),
+    item_id VARCHAR2(10),
+    reserv_no VARCHAR2(30),
+    quantity NUMBER(3,0),
+    sales NUMBER(10,0));
+
+12) order_info 테이블의 pk를 두 개! 설정
+ALTER TABLE order_info ADD CONSTRAINT pk_order_info PRIMARY KEY (order_no, item_id);
+
+13) item 테이블의 item_id를 외래키로 설정하여 order_info 테이블과 연결
+ALTER TABLE order_info ADD CONSTRAINT fk_order_info_item_id FOREIGN KEY (item_id) REFERENCES item (item_id);
+
+14) reservation 테이블의 reserv_no를 외래키로 설정하여 order_info 테이블과 연결
+ALTER TABLE order_info ADD CONSTRAINT fk_order_info_reserv_no FOREIGN KEY (reserv_no) 
+REFERENCES reservation (reserv_no);
+
+*. 데이터 input 파일이 있는 경우 @c:\SQLpractice\5.order_info.sql 실행하여 한 번에 입력 가능
+
+
+==========복붙 존===========
+
+
+CREATE TABLE address(zip_code VARCHAR2(6), address_detail VARCHAR2(20));
+ALTER TABLE address ADD CONSTRAINT pk_zip_code PRIMARY KEY (zip_code);
+CREATE TABLE customer(  customer_id VARCHAR2(10),
+                        customer_name VARCHAR2(20),
+                        phone_number VARCHAR2(15),
+                        email VARCHAR2(20),
+                        first_reg_date DATE,
+                        sex_code VARCHAR2(2),
+                        birth VARCHAR2(8),
+                        job VARCHAR2(20),
+                        zip_code VARCHAR2(6));
+ALTER TABLE customer ADD CONSTRAINT pk_customer PRIMARY KEY (customer_id);
+ALTER TABLE customer ADD CONSTRAINT fk_customer_zip_code FOREIGN KEY(zip_code) REFERENCES address(zip_code);
+CREATE TABLE item (     item_id VARCHAR2(10),
+			product_name VARCHAR2(30),
+			product_desc VARCHAR2(50),
+			category_id VARCHAR2(10),
+			price NUMBER(10,0));	
+ALTER TABLE item ADD CONSTRAINT pk_item PRIMARY KEY (item_id);
+CREATE TABLE reservation (
+    reserv_no VARCHAR2(30),
+    reserv_date VARCHAR2(8),
+    reserv_time VARCHAR2(4),
+    customer_id VARCHAR2(10) CONSTRAINT nn_reservation_customer_id NOT NULL enable, 
+    branch VARCHAR2(20),
+    visitor_cnt NUMBER(3,0),
+    cancel VARCHAR2(1));
+ALTER TABLE reservation ADD CONSTRAINT pk_reservation PRIMARY KEY (reserv_no);
+ALTER TABLE reservation ADD CONSTRAINT fk_reservation_customer_id FOREIGN KEY (customer_id) REFERENCES customer (customer_id);
+CREATE TABLE order_info (
+    order_no VARCHAR2(30),
+    item_id VARCHAR2(10),
+    reserv_no VARCHAR2(30),
+    quantity NUMBER(3,0),
+    sales NUMBER(10,0));
+ALTER TABLE order_info ADD CONSTRAINT pk_order_info PRIMARY KEY (order_no, item_id);
+ALTER TABLE order_info ADD CONSTRAINT fk_order_info_item_id FOREIGN KEY (item_id) REFERENCES item (item_id);
+ALTER TABLE order_info ADD CONSTRAINT fk_order_info_reserv_no FOREIGN KEY (reserv_no) 
+REFERENCES reservation (reserv_no);
+
+
+
+
+
+
+
+
+
+
+

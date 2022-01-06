@@ -1,3 +1,1 @@
-UPDATE departments
-SET manager_id = 500, location_id = 2000
-WHERE department_name = 'Sample_Dept';
+CREATE TABLE address(zip_code VARCHAR2(6), address_detail VARCHAR2(20));
