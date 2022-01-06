@@ -232,7 +232,16 @@ WHERE a.지점순위 = 1;
 201711	강남	216000		1
 201712	강남	816000		1
 
+9. 남성/여성 고객 수
 
+SELECT COUNT(customer_id) 고객수, 
+        SUM(DECODE(sex_code,'M',1,0)) 남성고객수,
+        SUM(DECODE(sex_code,'F',1,0)) 여성고객수,
+        SUM(DECODE(sex_code,null,1,0)) 기타
+FROM customer;
+
+고객수	남성고객수	여성고객수	기타
+183	114	39	30
 
 
 
