@@ -1,0 +1,67 @@
+
+<테이블 작성 시>
+PRIMARY KEY : 테이블의 대표 데이터
+FOREIGN KEY : 외부 테이블과 연결된 데이터
+
+DDL 정의어 : Data Manipulation Language 
+- 테이블 안의 데이터를 추가하고 수정하고 삭제하는 것
+- SELECT INSERT UPDATE DELETE
+
+DML 조작어 : Data Definition Language 
+- 테이블을 생성하고, 테이블 내용을 변경하고, 테이블을 지우는 것.
+- CREATE ALTER DROP RENAME
+
+TCL 트랜잭션 컨트롤 : Transaction Control Language
+- 트랜잭션을 정상적으로 완료하기 위한 명령어
+- COMMIT ROLLBACK
+
+UPDATE 구문 : 테이블에 이미 있는 내용을 갱신
+- 기존의 데이터를 다른 데이터 값으로 변경할 때 사용
+- WHERE 조건절 사용 가능
+UPDATE 테이블명 SET 열이름1 = 데이터값1 WHERE 조건식
+
+SHOW databases; - 데이터베이스 목록 전체보기
+SHOW tables; - 테이블 목록 전체보기
+SELECT * FROM 테이블명; - 테이블 내의 데이터 전체보기
+SELECT 열이름 FROM 테이블명; - 테이블 내의 특정 열 데이터 전체보기
+
+
+professor 테이블
+id(PK), name, tel
+lee, leesuyoung, 221
+
+CREATE TABLE professor ( 
+id VARCHAR(10) PRIMARY KEY, 
+name VARCHAR(30) FOREIGN KEY,
+(FOREIGN KEY (name) REFERENCES 외부테이블명,)
+tel VARCHAR(10));
+
+ALTER TABLE professor ADD PRIMARY KEY (professor_id);
+ALTER TABLE subject ADD FOREIGN KEY(proid) REFERENCES professor(id);
+
+alter table [추가할테이블명]
+add (constraint [제약조건명]) foreign key(컬럼명) references [부모테이블명] (PK컬럼명)
+[ON DELETE CASCADE(삭제 시 외래키도 삭제)/ ON UPDATE CASECADE(업데이트 시 외래키도 업데이트)];
+
+(무결성 : 결측치가 없음 = 데이터베이스가 정확함)
+도서관 앱을 구축하려고 한다. 요구사항을 분석하여 테이블을 생성하고 데이터를 넣어 무결성을 검증하시오
+1. 필요한 테이블의 필드와 속성을 정의하시오
+2. 예시 : 도서정보 테이블 / 열 : id(pk), 책이름, 수량(not null), 대여정보 ...
+3. 구현
+
+PRIMARY KEY 기본키, 식별자 역할
+- 중복값을 허용하지 않음
+- null 값을 가질 수 없음
+FOREIGN KEY 외래키
+- 테이블 간에 서로 연결 관계를 정의하는 키
+UNIQUE KEY 고유키
+- 한 행에서 유일한 값을 갖는 데이터값으로 구성된 열
+- 중복값이 없는 유일한 값을 갖지만 PRIMARY KEY는 아닌 데이터 값이 존재
+
+
+
+
+
+
+
+
