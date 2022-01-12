@@ -32,8 +32,8 @@ lee, leesuyoung, 221
 
 CREATE TABLE professor ( 
 id VARCHAR(10) PRIMARY KEY, 
-name VARCHAR(30) FOREIGN KEY,
-(FOREIGN KEY (name) REFERENCES 외부테이블명,)
+name VARCHAR(30),
+(FOREIGN KEY (name) REFERENCES 외부테이블명)
 tel VARCHAR(10));
 
 ALTER TABLE professor ADD PRIMARY KEY (professor_id);
@@ -59,6 +59,149 @@ UNIQUE KEY 고유키
 - 중복값이 없는 유일한 값을 갖지만 PRIMARY KEY는 아닌 데이터 값이 존재
 
 
+============================== MySQL 구문 =============================
+
+SELECT ~ FROM (WHERE~) : 테이블에서 데이터를 추출하는 기능 (실제 데이터 값은 변하지 않음)
+
+TINYINT : -128 ~ 127
+SMALLINT : -?? ~ 32767
+INT : -?? ~ 21억
+BIGINT 900경
+
+CHAR : 1~255 (고정길이 문자형)
+	CHAR(10) 'abc' -> 10자리 모두 확보 + 3개 사용 + 7자리 낭비
+VARCHAR : 1~16000정도 (가변길이 문자형)
+	VARCHAR(10) 'abc' -> 3자리만 사용
+
+SET SQL_SAFE_UPDATES = 0; SAFE모드 OFF
+SET SQL_SAFE_UPDATES = 1; SAFE모드 ON
+
+
+JOIN : 두 개의 테이블을 서로 묶어서 하나의 결과를 만드는 것
+테이블은 여러 정보를 주제에 따라 분리하여 저장하는것이 효율적
+분리된 테이블은 서로 관계를 맺고 있음
+- one to many : 일 대 다 관계 (회원테이블 : 구매테이블 / 회사원 : 급여 / 학생 : 성적 / 제품 : 판매)
+		one 테이블에는 하나의 값만 존재하나, 연결된 다른 테이블에는 여러개의 값이 존재할 수 있는 관계
+		주로 기본키와 외래키로 관계를 맺는다 => PK-FK 관계
+		ex) 한 명의 회원이 여러 번 구매를 할 수 있다 -> 구매테이블의 회원아이디는 기본키(고유함)가 아닌 외래키로 설정한다!
+- 외래키 FOREIGN KEY :
+
+<내부조인 - 일치하는 값에 해당하는 행을 불러옴>
+SELECT [불러올 열]
+FROM [정보를 불러올 테이블]
+JOIN [조인할 테이블]
+ON [조인조건]
+[WHERE 검색조건];
+
+<외부조인 - 값이 일치하지 않아도 행을 불러옴>
+SELECT [불러올 열]
+FROM [정보를 불러올 테이블]
+LEFT/RIGHT/FULL OUTER JOIN [조인할 테이블]
+ON [조인조건]
+[WHERE 검색조건];
+
+<제약조건> - UNIQUE, FK, PK, CHECK, NOT NULL, DEFAULT
+- CONSTRAINT : 데이터의 무결성을 유지하기 위해 제한하는 조건
+- 테이블은 기본키, 외래키와 같은 제약조건을 설정할 수 있음
+  -> 테이블을 구성하는 핵심개념으로 잘 활용하면 오류를 방지할 수 있음
+- 대표적인 제약조건으로는 기본키, 외래키가 있음
+- 고유키 PK : 중복되지 않는 열에 지정
+- 값을 입력하는 제약조건 CHECK (ex. 신장 데이터는 300을 넘지 않기, 국적 데이터는 한국이 기본값..)
+- 값을 반드시 입력해야 하는 제약조건 NOT NULL
+
+<기본키 제약 조건>
+- '중복을 허용하지 않고 NULL값을 허용하지 않음'이 자동으로 설정되어 중복값, NULL 입력 불가함
+- 대부분의 테이블은 기본키를 설정해야 한다 (중복을 방지하기 위해)
+- 기본키는 테이블 당 한 개만 가질 수 있다
+- 테이블의 특성을 가장 잘 반영하는 열을 기본키로 선택하는 것이 바람직하다
+
+1) CREATE TABLE _ (열이름 PRIMARY KEY,...);
+2) CREATE TABLE _ (.., PRIMARY KEY(열이름) );
+3) CREATE TABLE _ (.., CONSTRAINT PRIMARY PK_테이블명_열이름(열이름) );
+4) 테이블 생성 후 -> ALTER TABLE 테이블명 ADD CONSTRAINT PRIMARY KEY (열이름);
+
+<외래키 FOREIGN KEY 제약 조건>
+- 두 테이블 사이의 관계를 연결해주고 그 결과데이터의 무결성을 보장해주는 역할
+- 외래키가 설정된 열은 반드시 다른 테이블의 기본키와 동일함
+
+1) CREATE TABLE _ (열이름 FOREIGN KEY REFERENCES 테이블명(열이름),...)
+2) CREATE TABLE _ (.., FOREIGN KEY(열이름) REFERENCES 테이블명(열이름) );
+3) 테이블 생성 후 -> ALTER TABLE 테이블명 ADD CONSTRAINT FOREIGN KEY(열이름) REFERENCES 테이블명(열이름);
+
+*. 기본키가 있는 테이블을 '기준테이블', 외래키가 있는 테이블은 '참조테이블'이라고 함
+*. 기본키와 외래키가 설정되면 기준 테이블의 열은 변경되거나 삭제되지 않는다
+*. 두 데이터의 업데이트를 연동시키기 위해서는 -> 
+
+<고유키 제약조건 UNIQUE>
+- 중복되지 않는 유일한 값을 입력해야 하는 조건
+1) CREATE TABLE _ (열이름 자료형 UNIQUE ,...);
+
+<CHECK 제약조건>
+- 입력할 때 데이터를 점검하는 기능
+- ex. 어떤 열에 특정 값이 들어가지 않도록 제한 / '남,여' 둘 중 하나만 입력하도록 제한
+1) CREATE TABLE _ (gender char(5) CHECK(gender IN ('남','여')), height tinyint CHECK (height < 300) );
+2) CREATE TABLE _ (..., CHECK (gender IN ('남','여')), CHECK(heignt < 300) );
+3) 테이블 생성 후 -> ALTER TABLE member ADD CONSTRAINT CHECK(gender IN ('남','여')), CHECK(heignt < 300)
+
+<기본값 Default : 값을 입력하지 않았을 때 자동으로 입력될 값>
+1) CREATE TABLE _ (company char(5) DEFAULT '용감한형제들');
+2) ALTER TABLE member ALTER COLUMN company SET DEFAULT '용감한형제들';
+=> 기본값으로 INSERT 시 VALUES (DEFAULT)로 기입하기!
+
+<NULL 값 비허용 - NOT NULL>
+- CREATE TABLE _ (열이름 자료형 NOT NULL);
+
+<VIEW : 가상의 테이블>
+- 테이블의 필요한 내용만 골라서 볼 수 있도록 함
+- 뷰는 테이블과 아주 밀접하게 연관되어 있다
+- 뷰는 한 번 생성하면 테이블이라고 생각해도 될 정도로 테이블과 동일한 객체로 취급된다. => 뷰 이름으로 테이블을 부르듯 사용할 수 있다!
+- 뷰는 실제 데이터를 가지고 있는 건 아님 -> 뷰에 접근하는 순간 SELECT가 실행되는 것!
+- 단순 뷰 : 하나의 테이블과 연관된 뷰
+- 복합 뷰 : 2개 이상의 테이블과 연관된 뷰
+- 어떤 테이블과 연계되었는지 알 수 있도록 v_연결테이블 등으로 이름을 사용하면 좋다
+- 기본문법 : CREATE VIEW v_이름 AS SELECT 구문;
+- 뷰 삭제 : DROP VIEW 뷰이름;
+- 뷰 구조보기 : DESCRIBE 뷰이름;
+- 뷰 소스보기 : SHOW CREATE VIEW 뷰이름;
+- 뷰를 사용하는 이유 1) 보안 Security - 직급별 열람 제한 등 2)복잡한 SQL 구문을 단순화
+- 실무에서는 좀 더 복잡하게 사용됨
+- 뷰로 데이터 수정 및 삭제
+
+
+INSERT INTO `shop`.`member` (`member_id`, `member_name`, `member_addr`) VALUES ('jyp', '박진영', '서울 양천');
+INSERT INTO vips VALUES (NULL,'이몽룡',25); -> AUTO_INCREMENT 열의 경우 NULL값을 넣어주기
+
+UPDATE `shop`.`member` SET `member_addr` = '서울 강남' WHERE (`member_id` = 'hero');
+DELETE FROM `shop`.`member` WHERE (`member_id` = 'jyp');
+
+SELECT member_name, member_addr FROM shop.member;
+SELECT * FROM shop.member WHERE member_name = '아이유';
+SELECT last_insert_id(); -> 마지막에 넣은 id값 불러오기
+SELECT COUNT(*) FROM world.city; -> 테이블 행의 총 개수 가져오기
+
+DROP DATABASE IF EXISTS db명;
+
+CREATE TABLE member (
+mem_id CHAR(8) NOT NULL PRIMARY KEY,
+mem_name VARCHAR(10) NOT NULL,
+mem_number INT NOT NULL,
+mem_addr CHAR(2) NOT NULL,
+phone1 CHAR(3),
+phone2 CHAR(8),
+height SMALLINT,
+debut_date DATE);
+
+CREATE TABLE buy (
+num INT AUTO_INCREMENT PRIMARY KEY,
+mem_id CHAR(8) NOT NULL,
+prod_name CHAR(6) NOT NULL,
+group_name CHAR(4),
+price INT NOT NULL,
+amount SMALLINT NOT NULL,
+FOREIGN KEY (mem_id) REFERENCES member(mem_id)
+);
+
+SELECT * FROM member WHERE mem_name LIKE '__핑크'; -> 언더바_ : 글자 하나
 
 
 

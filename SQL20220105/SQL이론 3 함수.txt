@@ -87,18 +87,40 @@ JOIN 조인
 - 동등조인 : 조인 조건이 정확히 일치하는 경우
 	  똑같은 데이터끼리 연결 - 가장 일반적이고 자주 쓰는 조인
 	  조건값이 정확하게 일치하는 경우만 가져오기 때문에 inner join, equi join이라고 부름
+
+	SELECT [불러올 열]
+	FROM [정보를 불러올 테이블]
+	JOIN [조인할 테이블]		-> INNER JOIN도 됨
+	ON [조인조건]
+	[WHERE 검색조건];
+
 - 외부조인 : 조인 조건이 정확하지 않아도 가능 - 조건을 만족하지 않는 행도 모두 출력
 	    특징 1) 외부조인은 동등조인 조건을 만족하지 못해 누락되는 행을 출력하기 위해 사용
 		2) 외부조인은 (+) 기호를 사용
 		3) (+)기호는 조인할 행이 없는, 데이터 값이 부족한 테이블의 열이름 뒤에 기술함
 		4) (+)기호는 한 쪽에만 기술할 수 있으며, 양 쪽 모두에는 기술할 수 없다
 		5) (+)기호를 붙이면 데이터 값이 부족한 테이블에 null값을 갖는 행이 생성된다
+
+SELECT [불러올 열]
+FROM [정보를 불러올 테이블] LEFT/RIGHT/FULL OUTER JOIN [조인할 테이블]
+ON [조인조건]
+[WHERE 검색조건];
+
+LEFT OUTER JOIN : 왼쪽 테이블에 (+)를 붙인 것과 동일
+RIGHT OUTER JOIN : 오른쪽쪽 테이블에 (+)를 붙인 것과 동일
+
 - 자체조인 : 자체 테이블에서 조인(자기 자신의 데이터와 연결)
 	    특징	1) 자기 자신 테이블을 이용하여 조인
 		2) 같은 테이블을 사용하지만 조인을 위해 다른 별명 사용 - 다른 조인과 같은 형태
 		3) 동일한 열로 구성되어 있기 때문에 꼭 별칭.열이름 형태로 명확히 구별하여 조회!!!
 
 예시 - 동등조인)
+
+SELECT * FROM buy 
+JOIN member
+ON member.mem_id = buy.mem_id
+WHERE member.mem_id = 'BLK'; 
+
 SELECT *
 FROM employees A, departments B
 WHERE a.department_id = b.department_id;
