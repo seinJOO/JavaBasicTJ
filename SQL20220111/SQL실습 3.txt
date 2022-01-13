@@ -139,6 +139,7 @@ PRESIDENT	5000
 
 - 부서별, 직책별 합계행 추가하기
 SELECT deptno, job, sum(sal) FROM emp GROUP BY CUBE(deptno, job);
+
 DEPTNO	JOB		SUM(SAL)
  - 	 - 		29025 -> 총합계
  - 	CLERK		4150 -> 직책별 합계
@@ -253,8 +254,6 @@ WHERE empno NOT IN (SELECT mgr FROM emp WHERE mgr is not null); -> 직속 매니
 - > any : 가장 작은 값보다 크다
 - < all : 가장 작은 값보다 작다
 - < any : 가장 큰 값보다 작다
-
-
 
 
 

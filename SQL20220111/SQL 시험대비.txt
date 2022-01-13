@@ -204,7 +204,92 @@ FOREIGN KEY (mem_id) REFERENCES member(mem_id)
 SELECT * FROM member WHERE mem_name LIKE '__핑크'; -> 언더바_ : 글자 하나
 
 
+<UNION으로 맨 아래에 부서별월급합계, 총합계 출력하기> - 열 개수와 데이터타입 맞춰주기!
+SELECT CONCAT(first_name,last_name) AS name , department_id, salary
+FROM employees
+UNION 
+SELECT NULL, department_id, sum(salary)
+FROM employees
+GROUP BY department_id
+UNION
+SELECT NULL, NULL, sum(E.salary)
+FROM employees E
+;
 
+<RANK, DENSE_RANK, ROW_NUMBER 활용하기>
+SELECT item_id, quantity, sales , 
+    rank() OVER (ORDER BY SALES DESC) AS RANK ,             --> 1 2 2 4 5
+    dense_rank() OVER (ORDER BY SALES DESC) AS DENSERANK,   --> 1 2 2 3 3 
+    row_number() OVER (ORDER BY SALES DESC) AS ROWNUMBER    --> 1씩 증가하는 일련번호를 붙이기 때문에 순위처럼 쓸 수 있음
+FROM order_info
+;
+
+<시나리오>
+도서관 데이터베이스를 구축하려고 한다. 요구사항을 분석해서 필요한 엔터티로 테이블을 만들고 속성을 설정하시오
+엔터티의 개수는 3개, 각 엔터티에는 속성을 3개 이상 설정하시오
+제약조건 5개 이상 적용, 제약조건확인(무결성검증) 목록으로 만들어서 캡쳐 -  UNIQUE, FK, PK, CHECK, NOT NULL, DEFAULT
+테이블 1개에 예시데이터 2개만
+
+회원정보 (회원번호, 이름, 전화번호, 주소)
+도서정보 (도서번호, 도서명, 가격, 대여유무)
+도서관리 (도서관리번호, 도서번호, 대여유무, 대여회원번호, 대여일, 반납예정일)
+
+
+
+시험
+1. ERD(관계도) 캡쳐 - E01N1.jpg
+2. 제약조건목록 캡쳐 - E01N2.jpg
+3. 무결성 검증 1(다른값 넣었을 때 에러나는 거) - E01N3.jpg
+3.SQL 파일 - 전체 코드 - E01sql.sql
+
+압축파일 이름 : 17test3주세인.zip
+폴더명 E01 ...
+
+12:10분까지 제출 austiny@korea.ac.kr
+
+
+
+
+
+
+CREATE DATABASE test;
+USE test;
+
+CREATE TABLE user_info (
+user_no INT(10) AUTO_INCREMENT PRIMARY KEY,
+user_name VARCHAR(8) NOT NULL,
+user_phone VARCHAR(15) NOT NULL UNIQUE,
+user_addr VARCHAR(30) DEFAULT '서울시 마포구'
+);
+
+CREATE TABLE rental (
+rent_no INT(20) AUTO_INCREMENT PRIMARY KEY,
+book_no VARCHAR(20),
+rent_chk CHAR(1) CHECK (rent_chk IN ('Y','N')),
+user_no INT(10),
+rent_date DATE,
+due_date DATE
+);
+
+CREATE TABLE book_info (
+book_no VARCHAR(20) PRIMARY KEY,
+book_name VARCHAR(30),
+price INT(8) CHECK (price < 50000000)
+);
+
+
+ALTER TABLE rental ADD CONSTRAINT FOREIGN KEY (book_no) REFERENCES book_info(book_no) ;
+ALTER TABLE rental ADD CONSTRAINT FOREIGN KEY (user_no) REFERENCES user_info (user_no);
+
+INSERT INTO user_info VALUES 
+(NULL, '주세인','010-2222-3333','서울시 양천구'),
+(NULL,'아아메','02-888-9999','서울시 강서구'),
+(NULL,'아바라','080-5555-2222',NULL);
+
+INSERT INTO book_info VALUES
+('ABCOM-210523', '모두의 자바', 17000),
+('CAESQ-210511', '모두의 SQL', 28000),
+('FRGPY-200822', '모두의 파이썬', 30000);
 
 
 
