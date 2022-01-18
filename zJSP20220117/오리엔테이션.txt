@@ -1,0 +1,80 @@
+김덕우 선생님
+kdw335552@nate.com
+010-7979-5723
+
+
+
+프론트에서 데이터를 받아서 서버에 전달 -> 웹으로부터 전달받은 데이터를 처리
+
+웹에서 특정한 기능을 구현하도록 짠 프로그램 API -> 를 구현해서 웹에 제공
+ㄴ필요한 데이터만 수집하기 위해 열어놓은 창구!
+
+로그인(가입,세션받기,정보수정), 게시판, UML(데베 내용 정리)
+
+APM
+- Apache(웹서버), IIS, ENGINE X ...
+- PHP(서버스크립트-서버프로그램언어), C, C++, Python, Perl, JAVA, Ruby ...
+- MySQL(DB), MariaDB, Oracle ...
+
+
+URI
+--- URL : 데이터?의 위치값
+ |- URN
+
+PORT번호 : 서비스를 구분하는 구분값(마리아디비 3306, 탐캣 8080, ....)
+
+HTML - 정적 데이터 : 화면에 데이터를 어떻게 출력해줄 지 정해줌(처리 결과)
+Container - 동적 데이터 : JSP로 구동하는 프로그램 어플리케이션 - 정보 확인, 취합 후 결과 전달
+
+sqlplus
+
+connect system/0000@localhost:1521/XEPDB1;
+create user myjsp identified by myjsp;
+grant create session to myjsp;
+
+connect : 테이블 연결 권한
+resource : 테이블 생성 권한
+
+SQL> connect system/0000@localhost:1521/XEPDB1;
+연결되었습니다.
+SQL> alter session set container=XEPDB1;
+
+세션이 변경되었습니다.
+
+SQL> grant connect, resource to myjsp;
+
+권한이 부여되었습니다.
+
+SQL> connect myjsp/myjsp@localhost:1521/XEPDB1;
+연결되었습니다.
+
+SQL> create table test2  (test1 varchar(10), test2 varchar(10));
+
+테이블이 생성되었습니다.
+
+SQL> desc test2;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ TEST1                                              VARCHAR2(10)
+ TEST2                                              VARCHAR2(10)
+
+SQL> insert into test2 values ('test','test11');
+insert into test2 values ('test','test11')
+            *
+1행에 오류:
+ORA-01950: 테이블스페이스 'USERS'에 대한 권한이 없습니다.
+
+
+SQL> connect system/0000@localhost:1521/XEPDB1;
+연결되었습니다.
+SQL> alter user myjsp default tablespace users quota unlimited on users;
+
+사용자가 변경되었습니다.
+
+SQL> connect myjsp/myjsp@localhost:1521/XEPDB1;
+연결되었습니다.
+SQL> insert into test2 values ('test','test11');
+
+1 개의 행이 만들어졌습니다.
+
+SQL>
