@@ -5,3 +5,70 @@ xml파일 : 서버의 속성을 지정 - 서버가 제공하는 서비스 설정
 - 인자값과 속성값을 통해 지정함
 - 해당 파일에 servlet을 넣으면 특정 서블릿의 경로 설정 가능(servlet, servlet-mapping)
 - 특정 내용에 대한 설정값을 적용하기 위함
+
+
+HTTP : 프로토콜 - text기반
+
+<HTTP 서버에 정보를 전송하거나 요청하는 2가지 방식>
+1) GET 방식 
+	- 서버에 데이터를 요청하는 용도
+	- 전송하는 데이터 URL에 포함되어 전달됨
+	- ex) http://localhost:8080/login.jsp?id=user&pw=pass
+	- 전송했던 데이터는 브라우저의 히스토리에 접속했을 경우 남아있음 -> 보안성 취약
+	- 게시판 글 조회나 검색과 같이 서버에 정보를 가져올 필요가 있을 경우
+	- 전송할 수 있는 최대 크기가 브라우저 별로 다르지만 크기가 정해져있음 (4kbyte)
+	- HTML form태그가 꼭 필요하진 않다
+
+2) POST 방식 
+	- 서버에 데이터를 전송하는 용도
+	- 전송되는 데이터가 URL에 포시되지 않고, 객체의 메세지 body를 통해 전달됨
+	- 브라우저에 전달되는 데이터가 남지 않기 때문에 보안성이 GET보다는 강하다
+	- 비밀번호나 주민번호 등 Private한 정보를 서버에 전송해야 할 때 사용
+	- 반드시 HTML form 태그를 사용해서 처리해야 함 (***)
+	- 데이터의 양이 제한이 없기 때문에 대량의 데이터를 전송할 수 있음
+
+==============================================================================
+
+# Request 객체 (내장객체)
+	- 웹 브라우저를 통해 서버에 어떠한 정보를 요청하는 것 = request
+	- 요청한 정보를 담아 관리하는 객체를 "Request"라고 함
+
+ - 제공하는 기능
+	1. 클라이언트와 관련된 정보 읽기
+	2. 서버와 관련된 정보 읽기 (쿠키, 세션...)
+	3. 클라이언트가 전송한 요청 파라미터 읽기
+	4. 클라이언트가 전송한 쿠키 읽기 기능 (웹 세션)
+
+ ** Request 객체 관련 주요 매서드 **		(URL ⊃ URI)
+	1) getContextPath() : String - 웹 어플리케이션의 컨텍스트 루트의 경로
+	2) getMethod() : String - 웹 브라우저가 정보를 전송할 때 사용한 방식(get, post)
+	3) getServerName() : String - 연결할 때 사용한 서버의 이름
+	4) getServerPort() : int - 서버가 실행 중인 포트 번호를 알려줌
+	5) getRequestURL() : String - 요청 URL을 얻음
+	6) getRequestURI()	: StringBuffer - 요청 URI를 얻어옴
+	7) getRemoteAddr() : String - 웹 서버에 연결한 클라이언트 IP 주소
+	8) getProtocol() : String - 해당 프로토콜을 얻음
+	9) getParameter(name) : 이름이 name인 파라미터 값을 구함. 해당 파라미터가 존재하지 않는 경우 null값을 반환함
+	10) getParameterValues(name) : 이름이 name인 모든 파라미터 값을 배열로 구함. 파라미터가 존재하지 않는 경우 null 반환
+					-> 보통 체크박스의 중복값을 받을 때 적용
+	-> 오라클 홈페이지에서 더 볼 수 있음!	https://docs.oracle.com/javaee/6/api/javax/ws/rs/core/Request.html
+					https://docs.oracle.com/javaee/6/api/javax/servlet/ServletRequest.html
+
+
+	* 유튜브 동영상 소스복사를 하면 나오는 iframe태그 : 페이지 내에 독립적인 공간을 만들어줌
+
+** PATH : 웹에서 접근하는 경로
+	1. 절대 경로 : 프로젝트 전체 경로 (port 번호를 제외한 "/"컨텍스트로 경로를 참조하는 경우)
+	2. 상대 경로 : 현재 위치에서 다른 파일의 경로를 참조 (기준 : 현재 작업 위치)
+	
+
+
+
+
+
+
+
+
+
+
+
