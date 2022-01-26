@@ -1,0 +1,57 @@
+ (실습) 기존의 Persons와 Orders테이블을 삭제
+ 다음 조건에 맞게 Persons와 Orders테이블 생성한 후에 데이터를 추가함. 
+  
+  Persons : 
+     ID(int-not null, 자동 증가 처리, primary key)
+     LastName(varchar(255)-not null)
+     FirstName(varchar(255))
+     Age(int)
+     City(varchar(255), 기본값 :'Seoul')
+
+  Orders : 
+     ID(int-not null, 자동 증가 처리, primary key)
+     OrderNumber(int-not null)
+     PersonID(int)
+     OrderDate(timestamp, 자동으로 날짜 입력)
+     **마지막에 추가 제약 조건... 
+     FOREIGN KEY (PersonID) REFERENCES Persons(ID)
+
+   (insert)
+    이후에 Persons테이블에 user1 ~ user10까지 생성
+   Orders 테이블 OerderNumber 10개를 임의로 생성
+
+
+MariaDB [testDB]> select * from Persons;
++----+----------+-----------+------+---------+
+| ID | LastName | FirstName | Age  | City    |
++----+----------+-----------+------+---------+
+|  1 | user1    | user1     |   20 | Seoul   |
+|  2 | user2    | user2     |   21 | Seoul   |
+|  3 | user3    | user3     |   21 | Suwon   |
+|  4 | user4    | user4     |   21 | Bundang |
+|  5 | user5    | user5     |   21 | Guri    |
+|  6 | user6    | user6     |   22 |         |
+|  7 | user7    | user7     |   23 | Seoul   |
+|  8 | user8    | user8     |   30 | Seoul   |
+|  9 | user9    | user9     |   27 | Seoul   |
+| 10 | user10   | user10    |   43 | Seoul   |
++----+----------+-----------+------+---------+
+10 rows in set (0.001 sec)
+
+
+MariaDB [testDB]> select * from Orders;
++----+-------------+----------+---------------------+
+| ID | OrderNumber | PersonID | OrderDate           |
++----+-------------+----------+---------------------+
+|  1 |           1 |        1 | 2021-04-20 17:15:22 |
+|  2 |           2 |        2 | 2021-04-20 17:15:27 |
+|  3 |           3 |        3 | 2021-04-20 17:15:32 |
+|  4 |           4 |        4 | 2021-04-20 17:15:37 |
+|  5 |           5 |        6 | 2021-04-20 17:15:46 |
+|  6 |           6 |        5 | 2021-04-20 17:15:56 |
+|  7 |           7 |       10 | 2021-04-20 17:16:02 |
+|  8 |           8 |        9 | 2021-04-20 17:16:13 |
+|  9 |           9 |        7 | 2021-04-20 17:16:24 |
+| 10 |          10 |        8 | 2021-04-20 17:16:40 |
++----+-------------+----------+---------------------+
+10 rows in set (0.003 sec)

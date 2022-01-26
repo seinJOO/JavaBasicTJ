@@ -1,0 +1,37 @@
+SELECT DISTINCT age FROM persons WHERE age>=20 AND city IN ('Gwangju','Daegu');
+	-> 나이만 물어볼 경우 중복 제거 DISTINCT
+SELECT * FROM persons WHERE NOT city='Seoul' AND NOT city='Busan';
+
+Transaction - 한 번 시작 후 commit을 하면 transaction을 다시 시작해야 함
+
+BEGIN;
+INSERT INTO persons (lastname, firstname, age, city) 
+		  VALUES ('testuser1','testuser1',32,'Hanam'),
+			 ('testuser2','testuser2',36, 'Daegu'),
+			 ('testuser3','testuser3',29,'Busan'),
+			 ('testuser4','testuser4',31,'Hwaseong'),
+			 ('testuser5','testuser5',33,'Incheon');
+COMMIT; 	# transaction 종료
+SELECT * FROM persons;
+ROLLBACK;	 # commit을 통해 앞에서 transaction을 완료시켰기 때문에 rollback이 불가능!!
+SELECT * FROM persons;
+
+SELECT COUNT(firstname) FROM persons; 		  # count는 null값을 세지 않는다!
+SELECT COUNT(*) FROM persons; 			  # 테이블 내 전체 레코드 개수
+SELECT DISTINCT age FROM persons WHERE city LIKE '%n'; # 정규표현식은 LIKE로 사용!
+
+SELECT MAX(age) FROM (SELECT age FROM persons WHERE city='Seoul') AS age;
+=> AS는 결과값을 묶어서 테이블인 것 처럼 사용 가능하다 !!! (***)
+
+UNION에서는 DISTINCT가 자동으로 적용됨!
+UNION ALL : 중복 유지
+
+SELECT city, COUNT(city) FROM persons WHERE age >= 20 GROUP BY city HAVING COUNT(city) BETWEEN 2 AND 4;
+
+
+grant -> userid=MySQL아이디(root) /  host=접속서버 (mysql, mariadb에서만 가능)
+
+flush privileges; 구문을 써야 설정한 권한이 적용됨!
+
+
+
