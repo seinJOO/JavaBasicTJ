@@ -1,0 +1,8 @@
+## PreparedStatement 객체의 사용
+  - Statement 객체와 PreparedStatement 객체는 쿼리문을 실행하는 동일한 기능 제공
+  - PreparedStatement 객체를 사용하는 이유 : 객체가 값을 자동으로 변환하는 기능 제공, 코드의 간결화
+  - Statement 객체는 지정할 값이 많아질 경우 따옴표가 복잡하게 얽히기 때문에 
+		   코드 작성 시에 오류가 발생할 확률이 높음 + 수정이 어려움
+  - PreparedStatement 객체는 이러한 문제를 쉽게 해결
+	-> 값을 지정하는 부분에 "?"로 처리하기 때문에 간단히 값을 지정, 1부터 인덱스 값이 1씩 증가함
+
