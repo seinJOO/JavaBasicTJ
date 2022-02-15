@@ -38,12 +38,11 @@ Spring의 버전들
 
 5. Model2 방식의 MVC Framework를 지원
 
+
 <스프링 프레임워크 설정>
 
 #pom.xml - 설정값을 정의하는 파일
 	dependencies : 데이터를 이렇게 처리하겠다~
-
-
 
 
 

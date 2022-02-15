@@ -1,0 +1,34 @@
+
+DispatcherServlet에서 HandlerMapping 값에 따라 아래로 이동
+HandlerAdapter : 진짜 서비스로 연결해주는 역할
+
+### 스프링 설치
+marketplace - Spring Tools 3 설치
+spring legacy project - spring mvc project - 패키지이름 com.zerock.control 
+	-> jre 1.8로 맞추기(pom.xml, library) + maven update
+
+web.xml : 프로젝트 전체에 대한 설정파일
+
+  <filter>
+      <filter-name>encodingFilter</filter-name>
+      <filter-class>
+         org.springframework.web.filter.CharacterEncodingFilter
+      </filter-class>
+      <init-param>
+         <param-name>encoding</param-name>
+         <param-value>UTF-8</param-value>
+      </init-param>
+      <init-param>
+         <param-name>forceEncoding</param-name>
+         <param-value>true</param-value>
+      </init-param>
+   </filter>
+   <filter-mapping>
+      <filter-name>encodingFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+
+
+1. 쇼핑몰 : 추억의 아이템 (네이버api로 쇼핑 검색 연동)
+2. 싸이월드 커뮤니티 : 일촌평/우리다이어리/도토리 등 기존 기능 이름바꿔서 + 우리만의 기능 하나 추가
+3. 매칭 사이트 : 카공족 카페정보공유 / 일회성 운동모임 매칭 / 스터디매칭+공부질문답변

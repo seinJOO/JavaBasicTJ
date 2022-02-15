@@ -1,0 +1,36 @@
+
+### 의존객체를 자동을 주입하는 컴포넌트 스캔 사용하기
+
+<< 빈 생성 >>
+@Component - 어노테이션이 있으면 스프링 빈으로 자동 등록된다 (@Controller, @Component, @Service,@Repository)
+1) .xml에 컴포넌트 스캔 세팅(패키지 단위)
+   <context:component-scan base-package="test02.ex01.construct" />
+2) 스캔 할 클래스에 컴포넌트 어노테이션 =>컴포넌트 스캔으로 의존성 주입 - 알아서 bean으로 들어가게 됨
+	* 빈 이름은 클래스 이름에서 첫 문자만 소문자로 바뀐 이름으로 지정됨
+
+<< 의존성 주입 >>
+@Autowired - 속성, setter, 생성자에 적용 가능
+	생성자에 @Autowired가 있으면 스프링이 연관된 객체를 스프링 컨테이너에서 찾아서 넣어준다.
+	.xml의 <constructor-arg ref="chef" /> 태그와 같은 기능
+	검색순위 : 데이터타입-> bean 이름-> 변수명
+	대상을 지정해주지 않아도 자동으로 검색하여 객체를 불러옴
+
+-- 의존성 주입 시 인터페이스를 구현한 클래스가 두 개 이상이면 구분법 --
+
+@Qualifier (인터페이스를 구현한 클래스가 두 개 이상이면 내가 직접 객체의 우선순위를 지정해주기!!)	
+	동일한 객체가 여러 개 지정되어 있어 exception이 발생할 경우, 그 중 특정한 값을 지정하기 위해 사용
+	.xml에서 동일한 클래스의 여러 bean이 지정되어 있을 때 해당 bean 태그 내에 qualifier태그로 value를 지정해주고
+	@Autowired 아래에 @Qualifier(" 빈이름 ") 을 추가	
+
+@Resource - 속성, setter에서 설정 
+	     검색순위 : bean 이름 -> 타입 //이름에 우선하며, 이름을 지정하지 않으면 타입을 봄(=chef()클래스의 객체인지)
+	     먼저 이름으로 대상을 지정해주고, 이 이름으로 불러오겠다고 선언하는 것!
+	     @Resource("빈 이름")
+  @Resource("chef1") 
+  public Chef() {
+  }
+=> <bean id="chef1" class="test02.ex01.construct.Chef" />
+	
+
+
+
