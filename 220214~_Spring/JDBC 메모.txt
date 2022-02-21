@@ -1,0 +1,18 @@
+hikari bean을 hikari datasource에 생성자 느낌으로 주입하였음
+-> jdbcTemplate이름으로 객체를 생성하면서 datasource를 강제화하도록 의존주입함
+
+hikariCP 자동주입 흐름
+
+<root-context>로 불러오게 되는 bean 객체>
+	HikariConfig <--(의존)-- HikariDataSource <--(의존)-- JdbcTemplate
+
+<servlet-context로 불러오게 되는 bean 객체들>
+	@Controller ===(bean 스캔)===> BoardServiceController
+		: Controller는 Service와 View 사이에 존재 -> @Autowired로 Service를 호출
+	@Service    ===(인터페이스를 통해)===> BoardServiceImpl(인터페이스:BoardService)
+		: DAO를 불러서 사용함 -> @Autowired로 DAO를 호출
+	@DAO       ===(인터페이스를 통해)===> BoardDAOImpl
+		: DB 작업을 진행 -> @Autowired로 (root-context에 정의된)jdbcTemplate을 호출
+
+스프링 수업 진도 - 최소 AOP, 더 하면 jQuery 등등,,,
+3/3부터 수업시간에 플젝 시작하면서 부가기능 구현 알려주실 예정
