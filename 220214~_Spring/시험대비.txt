@@ -1,0 +1,28 @@
+
+root-context에서 bean 생성
+1) hikariCP 빈 등록 (id=hikariConfig)
+2) DataSource 설정 (id=ds, ref=hikariConfig)
+3) JdbcTemplate 설정 (id=jdbcTemplate, ref=ds)
+
+=> 패키지 및 클래스 생성하여 DB Connection Test 실행
+
+컨트롤러에서 화면 처리 (컨트롤러, 매핑 어노테이션)
+- 페이지는 무조건 GET방식으로 이동
+- 값을 받아오는건 POST방식
+
+VO 생성 (repository 어노테이션)
+
+서비스 인터페이스 생성 (필요한 메서드 나열)
+
+서비스 구현 (서비스 어노테이션)
+
+<<
+root-context에서 Mapper 패키지 스캔 설정 (mybatis-spring:scan)
+*mapper 인터페이스 생성 => DAO 인터페이스처럼 필요한 메서드 나열
+*mapper xml파일 생성 => 필요한 sql구문 설정(!DOCTYPE mapper 설정 필수)
+(<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">)
+>>
+
+<<
+DAO 생성
+>>
