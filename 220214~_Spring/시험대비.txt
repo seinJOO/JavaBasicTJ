@@ -1,28 +1,190 @@
+1) 기본 설정========================================================
 
-root-context에서 bean 생성
-1) hikariCP 빈 등록 (id=hikariConfig)
-2) DataSource 설정 (id=ds, ref=hikariConfig)
-3) JdbcTemplate 설정 (id=jdbcTemplate, ref=ds)
+>>>>>>>> pom.xml
+**java(1.8) 버전 변경 - 5.0.7.RELEASE
+**org.apache.maven.plugins 자바 버전 변경
 
-=> 패키지 및 클래스 생성하여 DB Connection Test 실행
+<!-- javax.servlet(3.1.0) 버전 변경 -->
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>javax.servlet-api</artifactId>
+         <version>3.1.0</version>
+         <scope>provided</scope>
+      </dependency>
+     
+      <!-- JDBC - oracle 설치 -->
+      <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
+	<dependency>
+	    <groupId>com.oracle.database.jdbc</groupId>
+	    <artifactId>ojdbc8</artifactId>
+	    <version>18.3.0.0</version>
+	</dependency>
+	<!-- JDBC templete 사용을 위한 라이브러리 추가 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+		<version>${org.springframework-version}</version>
+	</dependency>
+	
+	
+	<!-- 히카리 Connection Pool -->
+	<!-- https://mvnrepository.com/artifact/hikari-cp/hikari-cp -->
+	<dependency>
+	    <groupId>com.zaxxer</groupId>
+	    <artifactId>HikariCP</artifactId>
+	    <version>2.7.4</version>
+	</dependency>
+	
+	<!-- 스프링 테스트를 위한 추가 -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>5.0.7.RELEASE</version>
+		<scope>test</scope>
+	</dependency>
+      
+   
+      <!-- Test -->
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.12</version>
+         <scope>test</scope>
+      </dependency>        
+
+ 
+ 	<!-- MyBatis 관련 라이브러리 추가 -->
+ 	
+ 	<dependency>
+ 		<groupId>org.mybatis</groupId>
+ 		<artifactId>mybatis</artifactId>
+ 		<version>3.4.6</version>
+ 	</dependency>
+ 	
+ 	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+		<version>1.3.2</version>
+	</dependency>
+ </dependencies>
+====== update projects =====
+
+>>>>>>>>>>>> web.xml에서 한글처리를 위한 코드
+
+<filter>
+<filter-name>encodingFilter</filter-name>
+<filter-class>
+org.springframework.web.filter.CharacterEncodingFilter
+</filter-class>
+<init-param>
+<param-name>encoding</param-name>
+<param-value>UTF-8</param-value>
+</init-param>
+<init-param>
+<param-name>forceEncoding</param-name>
+<param-value>true</param-value>
+</init-param>
+</filter>
+<filter-mapping>
+<filter-name>encodingFilter</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
+>>>>>>>>>>> root-context.xml 빈 설정 변경
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+
+2) DB 연결 테스트========================================================
+>>>>>>>>>>>>>>>  JDBC
+ 1. root-context.xml 에 dataSource 설정
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521/XEPDB1" />
+		<property name="username" value="spring" />
+		<property name="password" value="spring" />
+</bean>
+
+
+>>>>>>>>>>>>>>> MyBatis ---------------------------------------------------------------
+1. root-context에서 bean 생성
+
+(1) hikariCP 빈 등록 (id=hikariConfig)
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521/XEPDB1" />
+		<property name="username" value="spring" />
+		<property name="password" value="spring" />
+	</bean>
+
+(2) DataSource 설정 (id=ds, ref=hikariConfig)
+	<bean id="ds" class="com.zaxxer.hikari.HikariDataSource">
+		<constructor-arg ref="hikariConfig"></constructor-arg>
+	</bean>
+(3) JdbcTemplate 설정 (id=jdbcTemplate, ref=ds)
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	<property name="dataSource" ref="ds"></property> 
+		<!-- jdbcTemplate으로 객체를 생성할 때 인자값으로 id="ds"인 bean의 인자값을 넘겨준다 -->
+	</bean>
+
+
+3) test폴더에서 JUnitTest 실행================================================================
+@RunWith() , @ContextConfiguration, @Test
+
+4) mapper 테스트를 위한 sqlSessionFactory 설정 =================================================
+  (1) root-context.xml에 sql팩토리 bean 추가
+	<!--  MyBatis 사용의 핵심 객체 SQLsessionFactory 추가  -->
+ 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"/>
+	</bean>
+   (2) myBatis 테스트 매퍼 스캔 태그 추가
+	<mybatis-spring:scan base-package="com.zerock.testmapper"/> 
+
+5) mybatis 테스트=====================================================================
+    (1) 매퍼 스캔 패키지와 동일한 이름의 패키지 생성
+    (2) 인터페이스 생성 - 일단 getTime()으로
+    (3) xml 파일 생성 (DOCTYPE을 mapper로)
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    	<mapper namespace="패키지.파일명"> ((구문삽입)) </mapper>
+    (4) 테스트패키지에 mybatis 테스트용 클래스 생성 & sql팩토리와 매퍼 테
+==============================================================================================
 
 컨트롤러에서 화면 처리 (컨트롤러, 매핑 어노테이션)
-- 페이지는 무조건 GET방식으로 이동
-- 값을 받아오는건 POST방식
+- 페이지는 무조건 GET방식으로 이동 @RequestMapping(value="/register", method=RequestMethod.GET)
+- 값을 받아오는건 POST방식 @RequestMapping(value="/boardForm", method = RequestMethod.POST)
 
 VO 생성 (repository 어노테이션)
+	생성자, 기본생성자 2개를 선언
+	VO 객체는 DB컬럼과 1:1 매칭이 되도록 생성
+	VO 객체는 은닉변수로 선언하되, getter/setter 생성
 
 서비스 인터페이스 생성 (필요한 메서드 나열)
 
 서비스 구현 (서비스 어노테이션)
 
-<<
-root-context에서 Mapper 패키지 스캔 설정 (mybatis-spring:scan)
-*mapper 인터페이스 생성 => DAO 인터페이스처럼 필요한 메서드 나열
-*mapper xml파일 생성 => 필요한 sql구문 설정(!DOCTYPE mapper 설정 필수)
-(<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">)
->>
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-<<
-DAO 생성
->>
+root-context에서 Mapper 패키지 스캔 설정 (mybatis-spring:scan)
+	*mapper 인터페이스 생성 => DAO 인터페이스처럼 필요한 메서드 나열
+	*mapper xml파일 생성 => 필요한 sql구문 설정(!DOCTYPE mapper 설정 필수)
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	id는 mapper인터페이스의 메서드명과 일치하게 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
+*** 오라클 새로운DB 생성 시 ***
+1) 시스템으로 접속
+alter session set container=XEPDB1;
+create user DB유저명 identified by 비밀번호; --DB 접속 정보 설정
+grant create session to myjsp; -- 테이블 생성에 관한 권한 부여
+grant connect, resource to myjsp; -- 테이블 연결 및 자원 관리에 관한 권한 부여
+alter user myjsp default tablespace users quota unlimited on users; -- 테이블 사용에 관한 모든 권한 부여
