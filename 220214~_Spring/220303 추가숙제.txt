@@ -1,0 +1,241 @@
+
+세션이 존재하는 경우 
+MyPage작업 - 비밀번호변경, 회원탈퇴
+로그아웃
+패스워드 변경 - 인증확인(세션id와 패스워드 재인증) - 패스워드 변경 => $.ajax이용하여 처리 가능
+lombok - setter/getter, 생성자 작업을 어노테이션으로 처리
+
+@Component + Data -> getter/setter 자동 생성
+다른 클래스의 객체를 선언했을 경우 -> @Setter(onMethod_ = {@Autowired})를 적용하여 setter 적용가능
+
+@Data
+ + 
+@AllArgsConstructor => 기본생성자 모든 멤버변수를 인자값으로 생성
+ + 
+@NoArgsConstructor => 기본생성자를 인자값 없이 생성
+
+
+=============pom.xml 설정 추가=======================
+
+ <!-- json 라이브러리 -->
+        <dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.8</version>
+	</dependency>
+
+
+
+=============MemberController 추가=======================
+
+		//AJAX_TEST에 접속
+		@RequestMapping("/ajax_test")
+		public String test() {
+			return "member/ajax_test";
+		}
+		
+		//AJAX 요청받기
+		//JSON 라이브러리
+/*		pom.xml에
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.8</version>
+		</dependency>		
+*/		
+		//AJAX문법을 통해 값을 받아오기 위한 메서드
+		@RequestMapping("/checkId")
+		@ResponseBody
+		//메서드에 @ResponseBody 로 어노테이션이 되어있다면 메서드에서 리넡되는 값은
+		//View리졸버로 전달되지 않고, 해당 메서드를 호출한 곳으로 결과를 반환한다.
+		public int CheckId(@RequestParam("id") String id) {
+			int result = member.checkId(id);
+			return result;
+		}
+
+
+=============MemberService 추가=======================
+
+public int checkId(String id);
+
+
+
+=============MemberServiceImpl 추가=======================
+
+
+	@Override
+	public int checkId(String id) {
+		int result = mapper.checkId(id);
+		return result;
+	}
+
+
+
+=============MemberMapper 추가=======================
+
+public int checkId(String id);
+
+
+
+=============MemberMapper.XML 추가=======================
+
+<select id="checkId" resultType="int">
+   	select count(*) as result from tbl_member where id = #{id}
+   </select>
+
+
+
+================views/member/join.jsp===================
+
+              
+              <!-- 자바스크립트(제이쿼리) 를 사용하기전에 input 태그의 id속성을 확인하세요. -->
+              <form class="user" action="joinForm" method="post" id="regForm">
+            
+  <!-- Bootstrap core JavaScript-->
+  <script src="${pageContext.request.contextPath}/resources/vendor/jquery/jquery.min.js"></script>
+<%--   <script src="${pageContext.request.contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="${pageContext.request.contextPath}/resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <!-- Custom scripts for all pages-->
+  <script src="${pageContext.request.contextPath}/resources/js/sb-admin-2.min.js"></script>
+  --%>
+  <script>
+   function IdCheck() {
+	var id = $("#id").val();   // id태그의 value에 접근
+	var userId = {"id" : id};  // 전송할 데이터의 key값
+	
+	if(id.length < 4) {
+		alert("아이디는 4글자 이상을 입력하세요");
+	} else {
+		// 먼저 ajax를 지원하는 json을 사용하기 위한 라이브러리 필요
+		//json은 {키:값}의 구조를 가지고 있는 데이터 묶음
+		$.ajax({
+			type : "post",
+			url : "checkId",
+			data : userId,		//서버에 전송할 데이터 json형식 (위에 var userId=로 정의해둠)
+			//dataType : "json",	//서버의 요청 후 리턴해주는 타입(생략가능)
+			error : function(request, error) {
+				alert(error + "\n" + request.status); //에러코드 등 출력
+			},
+			success : function(result) { 			//ajax 통신에 성공했을 때 호출됨, 
+				console.log("성공?실패?" + result);	//checkId의 결과가 result매개변수로 전달됨
+				if (result == 1) {
+					alert("이미 존재하는 아이디입니다.");
+				} else {
+			  		 alert("사용가능한 아이디입니다.");
+					 $("#id").attr("readonly", true);
+				}			
+			}
+		}) //$.ajax 동작 끝
+	}//else구문  끝
+   }
+   
+    //회원가입 체크
+   function joinCheck() {
+    	//attr(속성, 변경할 값) 함수는 해당 ID태그의 내부속성을 변경하는 함수
+    	//attr(속성) 함수의 매개값이 하나라면 해당 속성여부를 확인
+    	//val() 함수는 해당 ID태그의 값을 확인
+    	//focus() 함수는 해당 ID태그의 마우스 커서를 위치시킨다. 
+    	//submit() 함수는 해당 ID태그의 form을 서밋 처리
+    	if ( !$("#id").attr("readonly")) {
+    		alert("아이디 중복체크를 해야 합니다.");
+    	}else if( $("#name").val().length < 1 ) {
+    		alert("이름을 입력하세요");
+    	}else if( $("#pw").val().length < 1 ) {
+    		alert("비밀번호를 입력하세요");
+    	}else if ( $("#pw").val() != $("#pwCheck").val() ) {
+    		alert("비밀번호 확인란을 확인해주세요");
+    		$("#pwCheck").focus();
+    	}else if ( confirm("회원 가입 하시겠습니까?")){
+    		$("#regForm").submit();
+    	}
+    }
+   
+   </script>
+   
+   <script>
+	$(document).ready(
+	function() {
+		var msg = '${msg}';
+		
+		if (msg != '') {
+			alert('${msg}');
+		}		
+	}
+	)
+	</script>
+
+</body>
+
+</html>
+    
+================views/member/ajax_test.jsp===================
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="text" id="apple" value="주세인">
+	<input type="text" id="melon" value="주세니">
+	<input type="text" id="grape" value="쭈세니">
+	
+	<button onclick="check()">확인</button>
+	
+	<script src="${pageContext.request.contextPath}/resources/vendor/jquery/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+				//alert("화면 접속 시 바로 실행하는 기능 구현");	
+	
+		var msg = '${msg}';
+		
+		if (msg != '') {
+			alert('${msg}');
+		}		
+	
+		});
+		
+		function check() { //check함수가 엮인 버튼을 클릭했을 때 작동
+		
+			$.ajax({
+				type : "post",
+				url : "checkId",
+				data : {
+					"id" : "senny" //앞이 파라미터 값, 뒤가 DB의 value값
+					},
+				success : function(result) {
+					alert("비동기 성공!");
+				}
+			})
+		}
+	/*	
+		function check() {
+			$("#apple").attr("type","password");
+			$("#grape").focus();
+			$("#melon").attr("value","쭈세"); // 값도 바꿀수있음
+			var a = $("#melon").val();
+			alert(a);
+			//val() $("#아이디")
+			//attr(속성,값)
+			//attr(속성)
+			//removeattr(속성)
+			//focus()
+			
+			//$.ajax()는 key-value 형태로 데이터를 주고받는다
+		}
+		*/
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+

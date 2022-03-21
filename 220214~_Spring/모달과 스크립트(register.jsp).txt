@@ -1,0 +1,46 @@
+<script type="text/javascript">
+	function register() {
+
+		//$("#아이디") 는 HTML의 아이디 속성에 한번에 접근합니다.
+		//val()함수는 해당 아이디의 값에 접근합니다.
+		if( $("#title").val() == "" ) {
+			
+			$("#myModal").modal("show");//모달 보기
+		} else if( $("#writer").val() == "") {
+			
+			$("#myModal").modal("show");//모달 보기
+		} else {
+			$("#regForm").submit(); //스크립트 서브밋 함수
+		}
+
+	}
+
+</script>
+
+
+	<!-- 
+	모달창!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	화면에 미리 만들어 놓고 호출해서 사용하는 방식을 사용합니다.
+	id 지정-> 자바스크립트를 통해 modal("show") 함수로 화면에 보여지도록 처리합니다.
+	 -->
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Modal Heading</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">제목, 작성자는 필수 사항입니다.</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
