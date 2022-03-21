@@ -1,3 +1,8 @@
+kdw335552@nate.com 로 제출
+
+
+
+
 1) 기본 설정========================================================
 
 >>>>>>>> pom.xml
@@ -154,8 +159,9 @@ org.springframework.web.filter.CharacterEncodingFilter
     (3) xml 파일 생성 (DOCTYPE을 mapper로)
 	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     	<mapper namespace="패키지.파일명"> ((구문삽입)) </mapper>
-    (4) 테스트패키지에 mybatis 테스트용 클래스 생성 & sql팩토리와 매퍼 테
+    (4) 테스트패키지에 mybatis 테스트용 클래스 생성 & sql팩토리와 매퍼 테스트
 ==============================================================================================
+* root-context.xml에서 컨트롤러, 서비스 컴포넌트 스캔 처리 *
 
 컨트롤러에서 화면 처리 (컨트롤러, 매핑 어노테이션)
 - 페이지는 무조건 GET방식으로 이동 @RequestMapping(value="/register", method=RequestMethod.GET)
